@@ -7,11 +7,13 @@ import SignUp from "../Pages/Authentication/SignUp";
 import Payment from "../Pages/Payment/Payment";
 import PaymentHistory from "../Pages/Payment/PaymentHistory";
 import PrivateRoute from "../Routes/PrivateRoute";
+import ErrorPage from "../Components/Common/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout></RootLayout>,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         index: true,
@@ -47,6 +49,11 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "*",
+    element: <ErrorPage></ErrorPage>,
+  },
 ]);
+
 
 export default router;
