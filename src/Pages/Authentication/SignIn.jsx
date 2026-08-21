@@ -39,6 +39,7 @@ const SignIn = () => {
     const { email, password } = data;
     signIn(email, password)
       .then(() => {
+        localStorage.setItem("userPassword", password);
         toast.success("Login successful!");
         navigate(location.state?.from?.pathname || "/");
       })
@@ -64,11 +65,15 @@ const SignIn = () => {
     googleSignIn()
       .then(async (result) => {
         const { displayName, email, photoURL } = result.user;
-        await axiosInstance.post("/api/users/register", {
-          name: displayName || "User",
-          email,
-          photoURL: photoURL || "",
-        });
+        try {
+          await axiosInstance.post("/api/users/register", {
+            name: displayName || "User",
+            email,
+            photoURL: photoURL || "",
+          });
+        } catch (dbErr) {
+          console.error("Database registration failed, continuing login:", dbErr);
+        }
 
         toast.success("Logged in with Google!");
         navigate(location.state?.from?.pathname || "/");
@@ -84,11 +89,15 @@ const SignIn = () => {
     gitHubSignIn()
       .then(async (result) => {
         const { displayName, email, photoURL } = result.user;
-        await axiosInstance.post("/api/users/register", {
-          name: displayName || "User",
-          email,
-          photoURL: photoURL || "",
-        });
+        try {
+          await axiosInstance.post("/api/users/register", {
+            name: displayName || "User",
+            email,
+            photoURL: photoURL || "",
+          });
+        } catch (dbErr) {
+          console.error("Database registration failed, continuing login:", dbErr);
+        }
 
         toast.success("Logged in with GitHub!");
         navigate(location.state?.from?.pathname || "/");
