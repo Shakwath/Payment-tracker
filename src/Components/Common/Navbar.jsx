@@ -8,6 +8,7 @@ import {
   FaSun,
   FaMoon,
   FaSignOutAlt,
+  FaUserCog,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 import useAuth from "../../Hooks/useAuth";
@@ -154,6 +155,15 @@ const Navbar = () => {
                       </p>
                     </li>
                     <li>
+                      <Link
+                        to="/update-profile"
+                        className="flex items-center gap-2 px-4 py-2.5 text-base-content hover:bg-base-200 rounded-xl transition"
+                      >
+                        <FaUserCog />
+                        <span>Update Profile</span>
+                      </Link>
+                    </li>
+                    <li>
                       <button
                         onClick={handleLogoutClick}
                         className="flex items-center gap-2 px-4 py-2.5 text-error hover:bg-error/10 hover:text-error rounded-xl transition"
@@ -220,6 +230,13 @@ const Navbar = () => {
                         <p className="text-[10px] text-base-content/60 truncate mt-0.5">Pass: {storedPassword}</p>
                       </div>
                     </div>
+                    <Link
+                      to="/update-profile"
+                      className="flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-base-200 hover:bg-base-300 transition text-base-content"
+                    >
+                      <FaUserCog />
+                      <span>Update Profile</span>
+                    </Link>
                     <button
                       onClick={handleLogoutClick}
                       className="flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-error/10 text-error hover:bg-error hover:text-error-content transition"
