@@ -7,6 +7,7 @@ import SignUp from "../Pages/Authentication/SignUp";
 import Payment from "../Pages/Payment/Payment";
 import PaymentHistory from "../Pages/Payment/PaymentHistory";
 import UpdateProfile from "../Pages/Profile/UpdateProfile";
+import About from "../Pages/About/About";
 import PrivateRoute from "../Routes/PrivateRoute";
 import ErrorPage from "../Components/Common/ErrorPage";
 
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
             <UpdateProfile />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "about",
+        element: <About />,
       },
     ],
   },
