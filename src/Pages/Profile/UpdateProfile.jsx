@@ -59,7 +59,7 @@ const UpdateProfile = () => {
     <section
       className={`min-h-[calc(100vh-4.5rem)] px-4 py-10 transition-all duration-500 flex items-center justify-center ${
         dark
-          ? "bg-slate-950"
+          ? "bg-slate-900"
           : "bg-gradient-to-br from-slate-50 via-white to-amber-50/40"
       }`}
     >

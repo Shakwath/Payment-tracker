@@ -125,7 +125,7 @@ const About = () => {
   const isDark = theme === "dark";
 
   const t = {
-    page: isDark ? "bg-[#050816] text-slate-100" : "bg-white text-slate-900",
+    page: isDark ? "bg-base-100 text-slate-100" : "bg-white text-slate-900",
     heading: isDark ? "text-white" : "text-slate-900",
     body: isDark ? "text-slate-400" : "text-slate-600",
     subtle: isDark ? "text-slate-500" : "text-slate-500",

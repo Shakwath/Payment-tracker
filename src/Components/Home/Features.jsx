@@ -38,7 +38,7 @@ const Features = () => {
   const dark = theme === "dark";
 
   return (
-    <section className={`py-20 transition-all duration-500 ${dark ? "bg-slate-950" : "bg-gradient-to-b from-white to-amber-50/20"}`}>
+    <section className={`py-20 transition-all duration-500 ${dark ? "bg-slate-900" : "bg-gradient-to-b from-white to-amber-50/20"}`}>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-base font-semibold leading-7 text-primary uppercase tracking-widest">

@@ -22,8 +22,9 @@
   --color-primary: #f59e0b;
   --color-secondary: #f97316;
   --color-accent: #fbbf24;
-  --color-base-100: #020617;
-  --color-base-200: #0f172a;
-  --color-base-300: #1e293b;
+  --color-base-100: #0f172a;
+  --color-base-200: #1e293b;
+  --color-base-300: #334155;
+  --color-base-content: #f8fafc;
 }
 

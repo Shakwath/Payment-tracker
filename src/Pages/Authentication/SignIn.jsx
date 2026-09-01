@@ -112,7 +112,7 @@ const SignIn = () => {
     <section
       className={`relative min-h-screen pt-24 ${
         dark
-          ? "bg-slate-950"
+          ? "bg-slate-900"
           : "bg-gradient-to-br from-slate-50 via-white to-amber-50/40"
       }`}
     >

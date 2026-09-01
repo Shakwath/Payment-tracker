@@ -168,7 +168,7 @@ const SignUp = () => {
     <section
       className={`min-h-screen px-5 py-10 transition-all duration-500 ${
         dark
-          ? "bg-slate-950"
+          ? "bg-slate-900"
           : "bg-gradient-to-br from-slate-50 via-white to-amber-50/40"
       }`}
     >
