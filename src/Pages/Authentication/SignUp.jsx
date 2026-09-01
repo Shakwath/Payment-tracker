@@ -166,59 +166,70 @@ const SignUp = () => {
     ${error?"":"placeholder:text-slate-400"}`;
   return (
     <section
-    className={` min-h-screen px-5 py-10 transition-all duration-500 ${dark  ? "bg-[#050816]" : "bg-gradient-to-br from-slate-50 via-white to-blue-50"}`}
+      className={`min-h-screen px-5 py-10 transition-all duration-500 ${
+        dark
+          ? "bg-slate-950"
+          : "bg-gradient-to-br from-slate-50 via-white to-amber-50/40"
+      }`}
     >
       <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
         {/* Image Side */}
         <motion.div
-          initial={{opacity:0,x:-30}}
-          animate={{opacity:1,x:0}}
-          transition={{duration:.6}}
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
           className="hidden lg:block"
         >
-          <p className="inline-block rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold tracking-widest text-blue-600">
-            JOIN CAREERFORGE BD
+          <p className="inline-block rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold tracking-widest text-amber-600 dark:text-amber-400">
+            JOIN PAYMENTTRACK
           </p>
-         <h2
-          className={`mt-4 text-4xl font-bold ${
-            dark ? "text-white" : "text-slate-900"
-          }`}
-        >
-          Build your career with AI powered guidance
-        </h2>
-          <div className={` mt-8 rounded-4xl border p-5 shadow-xl backdrop-blur ${ dark ? "border-slate-70 bg-slate-900/70" : "border-white bg-white/70"   }
-          `}>
-          <img
-          src={Registeri}
-          alt="Register"
-          className={`w-full rounded-3xl transition duration-500 ${ dark ? "brightness-45" : "brightness-100"}`}
-        />
-      </div>
-    </motion.div>
+          <h2
+            className={`mt-4 text-4xl font-bold ${
+              dark ? "text-white" : "text-slate-900"
+            }`}
+          >
+            Manage and track all student payments effortlessly
+          </h2>
+          <div
+            className={`mt-8 rounded-4xl border p-5 shadow-xl backdrop-blur ${
+              dark ? "border-slate-800 bg-slate-900/70" : "border-white bg-white/70"
+            }`}
+          >
+            <img
+              src={Registeri}
+              alt="Register"
+              className={`w-full rounded-3xl transition duration-500 ${
+                dark ? "brightness-45" : "brightness-100"
+              }`}
+            />
+          </div>
+        </motion.div>
 
         {/* Form */}
         <motion.div
-          initial={{opacity:0,y:30}}
-          animate={{opacity:1,y:0}}
-          transition={{duration:.6}}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
           <div
-          className={`
-          rounded-4xl border p-6 shadow-xl backdrop-blur-xl sm:p-8
-          transition-all duration-500 ${ dark  ? "border-slate-700 bg-slate-900/70"   : "border-white/70 bg-white/80"  }
-          `}
+            className={`rounded-4xl border p-6 shadow-xl backdrop-blur-xl sm:p-8 transition-all duration-500 ${
+              dark
+                ? "border-slate-800 bg-slate-900/70"
+                : "border-white/70 bg-white/80"
+            }`}
           >
             <div className="mb-6 text-center">
-            <h1
-            className={`text-3xl font-bold ${ dark?"text-white":"text-slate-900"
-            }`}
-            >
+              <h1
+                className={`text-3xl font-bold ${
+                  dark ? "text-white" : "text-slate-900"
+                }`}
+              >
                 Create Account
-            </h1>
-            <p className="mt-2 text-sm text-slate-500">
-                Start your AI career journey today
-            </p>
-          </div>
+              </h1>
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                Start tracking tuition and fee collections today
+              </p>
+            </div>
             <form
               onSubmit={handleSubmit(handleRegister)}
               className="space-y-4"
@@ -375,22 +386,21 @@ const SignUp = () => {
 
               <button
                 disabled={loading}
-                className=" group flex w-full items-center justify-center gap-2  rounded-2xl bg-gradient-to-r    from-blue-600 via-indigo-600 to-violet-600  py-3 font-semibold text-white shadow-lg transition hover:-translate-y-1 "
+                className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 py-3.5 font-semibold text-white shadow-lg shadow-amber-500/25 transition duration-300 hover:-translate-y-0.5 hover:shadow-amber-500/35 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {loading?"Creating...":"Register"}
-                {
-                  !loading &&
+                {loading ? "Creating..." : "Register"}
+                {!loading && (
                   <ArrowRight
                     size={18}
                     className="transition group-hover:translate-x-1"
                   />
-                }
+                )}
               </button>
-              <p className="text-center text-sm text-slate-600">
-                Already have account?
+              <p className="text-center text-sm text-slate-600 dark:text-slate-400">
+                Already have an account?
                 <Link
                   to="/signin"
-                  className="ml-1 font-semibold text-blue-600"
+                  className="ml-1 font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400"
                 >
                   Login
                 </Link>
@@ -399,7 +409,7 @@ const SignUp = () => {
               {/* divider */}
               <div className="relative py-1">
                 <div className="absolute inset-0 flex items-center">
-                  <div className={`w-full border-t ${ dark ? "border-slate-700" : "border-slate-200"
+                  <div className={`w-full border-t ${ dark ? "border-slate-800" : "border-slate-200"
                     }`}
                   />
                 </div>
@@ -407,7 +417,7 @@ const SignUp = () => {
                   <span
                     className={`px-4 text-sm ${
                       dark
-                        ? "bg-[#050816] text-slate-400"
+                        ? "bg-slate-900 text-slate-400"
                         : "bg-white text-slate-500"
                     }`}
                   >

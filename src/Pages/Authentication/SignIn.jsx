@@ -110,15 +110,13 @@ const SignIn = () => {
 
   return (
     <section
-  className={`relative min-h-screen pt-24 ${
-    dark
-      ? "bg-[#050816]"
-      : "bg-gradient-to-br from-slate-50 via-white to-blue-50"
-  }`}
->
-
-   <div className="relative z-10 mx-auto max-w-7xl grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
-
+      className={`relative min-h-screen pt-24 ${
+        dark
+          ? "bg-slate-950"
+          : "bg-gradient-to-br from-slate-50 via-white to-amber-50/40"
+      }`}
+    >
+      <div className="relative z-10 mx-auto max-w-7xl grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
         {/* LEFT SIDE */}
         <motion.div
           initial={{ opacity: 0, x: -35 }}
@@ -127,20 +125,25 @@ const SignIn = () => {
           className="hidden lg:block"
         >
           <div className="relative mx-auto max-w-xl">
-             <div className="mt-5 max-w-lg">
-            <p className="inline-flex items-center rounded-full border border-[#10B981]/20 bg-[#0F172A] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#10B981]">
-          Welcome back
-        </p>
-            <h2 className={`mt-3 text-3xl font-bold tracking-tight mb-4 ${dark?"text-white":"text-slate-900"}
-            `}>
-                Continue building your dream career with CareerForge BD
+            <div className="mt-5 max-w-lg">
+              <p className="inline-flex items-center rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-600 dark:text-amber-400">
+                Welcome back
+              </p>
+              <h2
+                className={`mt-3 text-3xl font-bold tracking-tight mb-4 ${
+                  dark ? "text-white" : "text-slate-900"
+                }`}
+              >
+                Continue managing your payments with PaymentTrack
               </h2>
             </div>
-            <div className="absolute -top-6 -left-6 h-24 w-24 rounded-3xl bg-blue-500/10 blur-2xl" />
-            <div className="absolute -bottom-6 right-0 h-28 w-28 rounded-3xl bg-violet-500/10 blur-2xl" />
-          <div className={`rounded-4xl border p-5 shadow-xl backdrop-blur-xl ${ dark  ?"border-slate-700 bg-slate-900/70" :"border-white/60 bg-white/70"  }
-          `}
-          >
+            <div className="absolute -top-6 -left-6 h-24 w-24 rounded-3xl bg-amber-500/10 blur-2xl" />
+            <div className="absolute -bottom-6 right-0 h-28 w-28 rounded-3xl bg-orange-500/10 blur-2xl" />
+            <div
+              className={`rounded-4xl border p-5 shadow-xl backdrop-blur-xl ${
+                dark ? "border-slate-800 bg-slate-900/70" : "border-white/60 bg-white/70"
+              }`}
+            >
               <img
                 src={login}
                 alt="Login Illustration"
@@ -253,12 +256,12 @@ const SignIn = () => {
       </p>
     )}
     </div>
-       {/* forgot password */}
+        {/* forgot password */}
         <div className="flex items-center justify-end">
                 <button
                   type="button"
                   onClick={goToForget}
-                  className="text-sm font-medium text-blue-600 transition hover:text-blue-700 hover:underline"
+                  className="text-sm font-medium text-amber-600 transition hover:text-amber-700 hover:underline dark:text-amber-400"
                 >
                   Forgot password?
                 </button>
@@ -268,7 +271,7 @@ const SignIn = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 via-indigo-600 to-violet-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition duration-300 hover:-translate-y-0.5 hover:shadow-blue-500/30 disabled:cursor-not-allowed disabled:opacity-70"
+                className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/25 transition duration-300 hover:-translate-y-0.5 hover:shadow-amber-500/35 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {loading ? "Logging in..." : "Login"}
                 {!loading && (
@@ -277,10 +280,10 @@ const SignIn = () => {
               </button>
 
               {/* register */}
-              <p className="pt-1 text-center text-sm text-slate-600">
+              <p className="pt-1 text-center text-sm text-slate-600 dark:text-slate-400">
                 Don't have an account?{" "}
                 <Link
-                  className="font-semibold text-blue-600 transition hover:text-blue-700"
+                  className="font-semibold text-amber-600 transition hover:text-amber-700 dark:text-amber-400"
                   to="/signup"
                 >
                   Register
@@ -290,7 +293,7 @@ const SignIn = () => {
               {/* divider */}
              <div className="relative py-1">
           <div className="absolute inset-0 flex items-center">
-            <div className={`w-full border-t ${ dark ? "border-slate-700" : "border-slate-200"
+            <div className={`w-full border-t ${ dark ? "border-slate-800" : "border-slate-200"
               }`}
             />
           </div>
@@ -298,7 +301,7 @@ const SignIn = () => {
             <span
               className={`px-4 text-sm ${
                 dark
-                  ? "bg-[#050816] text-slate-400"
+                  ? "bg-slate-900 text-slate-400"
                   : "bg-white text-slate-500"
               }`}
             >

@@ -59,8 +59,8 @@ const UpdateProfile = () => {
     <section
       className={`min-h-[calc(100vh-4.5rem)] px-4 py-10 transition-all duration-500 flex items-center justify-center ${
         dark
-          ? "bg-[#050816]"
-          : "bg-gradient-to-br from-slate-50 via-white to-blue-50"
+          ? "bg-slate-950"
+          : "bg-gradient-to-br from-slate-50 via-white to-amber-50/40"
       }`}
     >
       <div className="w-full max-w-5xl mx-auto">
@@ -123,8 +123,8 @@ const UpdateProfile = () => {
               <div
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide ${
                   dark
-                    ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/25"
-                    : "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                    ? "bg-amber-500/15 text-amber-400 border border-amber-500/25"
+                    : "bg-amber-50 text-amber-600 border border-amber-200"
                 }`}
               >
                 <Shield size={14} />
@@ -313,7 +313,7 @@ const UpdateProfile = () => {
                 <button
                   type="submit"
                   disabled={updating}
-                  className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 via-indigo-600 to-violet-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition duration-300 hover:-translate-y-0.5 hover:shadow-blue-500/30 disabled:cursor-not-allowed disabled:opacity-70 mt-6"
+                  className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/25 transition duration-300 hover:-translate-y-0.5 hover:shadow-amber-500/35 disabled:cursor-not-allowed disabled:opacity-70 mt-6"
                 >
                   <Save size={16} />
                   <span>{updating ? "Saving Changes..." : "Save Changes"}</span>

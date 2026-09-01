@@ -38,7 +38,7 @@ const Features = () => {
   const dark = theme === "dark";
 
   return (
-    <section className={`py-20 transition-all duration-500 ${dark ? "bg-[#050816]" : "bg-gradient-to-b from-white to-blue-50/30"}`}>
+    <section className={`py-20 transition-all duration-500 ${dark ? "bg-slate-950" : "bg-gradient-to-b from-white to-amber-50/20"}`}>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-base font-semibold leading-7 text-primary uppercase tracking-widest">
@@ -64,7 +64,7 @@ const Features = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className={`flex flex-col rounded-3xl border p-6 transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
-                    dark ? "border-slate-800 bg-slate-900/40 hover:border-indigo-500/50" : "border-slate-100 bg-white hover:border-indigo-200"
+                    dark ? "border-slate-800 bg-slate-900/40 hover:border-amber-500/50" : "border-slate-100 bg-white hover:border-amber-300"
                   }`}
                 >
                   <dt className="flex items-center gap-x-3 text-base font-semibold leading-7">
