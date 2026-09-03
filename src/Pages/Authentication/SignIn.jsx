@@ -110,13 +110,11 @@ const SignIn = () => {
 
   return (
     <section
-      className={`relative min-h-screen pt-24 ${
-        dark
-          ? "bg-slate-900"
-          : "bg-gradient-to-br from-slate-50 via-white to-amber-50/40"
+      className={`relative min-h-screen pt-24 pb-16 ${
+        dark ? "bg-base-100" : "bg-gradient-to-br from-slate-50 via-white to-purple-50/30"
       }`}
     >
-      <div className="relative z-10 mx-auto max-w-7xl grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
         {/* LEFT SIDE */}
         <motion.div
           initial={{ opacity: 0, x: -35 }}
@@ -126,29 +124,29 @@ const SignIn = () => {
         >
           <div className="relative mx-auto max-w-xl">
             <div className="mt-5 max-w-lg">
-              <p className="inline-flex items-center rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-600 dark:text-amber-400">
-                Welcome back
+              <p className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                AUTHENTICATION • SYS-LOG
               </p>
               <h2
-                className={`mt-3 text-3xl font-bold tracking-tight mb-4 ${
+                className={`mt-3 text-3xl font-extrabold tracking-tight mb-4 ${
                   dark ? "text-white" : "text-slate-900"
                 }`}
               >
                 Continue managing your payments with PaymentTrack
               </h2>
             </div>
-            <div className="absolute -top-6 -left-6 h-24 w-24 rounded-3xl bg-amber-500/10 blur-2xl" />
-            <div className="absolute -bottom-6 right-0 h-28 w-28 rounded-3xl bg-orange-500/10 blur-2xl" />
+            <div className="absolute -top-6 -left-6 h-24 w-24 rounded-3xl bg-primary/15 blur-2xl" />
+            <div className="absolute -bottom-6 right-0 h-28 w-28 rounded-3xl bg-secondary/15 blur-2xl" />
             <div
-              className={`rounded-4xl border p-5 shadow-xl backdrop-blur-xl ${
-                dark ? "border-slate-800 bg-slate-900/70" : "border-white/60 bg-white/70"
+              className={`rounded-3xl border p-5 shadow-xl backdrop-blur-xl ${
+                dark ? "border-slate-800 bg-slate-900/60" : "border-slate-200 bg-white/80"
               }`}
             >
               <img
                 src={login}
                 alt="Login Illustration"
-               className={`w-full rounded-3xl transition duration-500 ${ dark ? "brightness-45" : "brightness-100"}`}
-        />
+                className={`w-full rounded-2xl transition duration-500 ${ dark ? "brightness-90 opacity-90" : "brightness-100"}`}
+              />
             </div>
           </div>
         </motion.div>
@@ -158,16 +156,17 @@ const SignIn = () => {
           initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          className="mx-auto w-full max-w-xl">
-         <div className={` rounded-4xl border p-6 shadow-xl backdrop-blur-2xl sm:p-8 ${ dark ?"border-slate-700 bg-slate-900/70" :"border-white/70 bg-white/80" }
-    `}
-    >
+          className="mx-auto w-full max-w-xl"
+        >
+          <div className={`rounded-3xl border p-6 shadow-xl backdrop-blur-2xl sm:p-8 ${
+            dark ? "border-slate-800 bg-slate-900/80" : "border-slate-200 bg-white/90"
+          }`}>
             {/* heading */}
             <div className="mb-6 text-center">
-              <h1 className={`text-3xl font-bold tracking-tight ${dark?"text-white":"text-slate-900"}`}>
+              <h1 className={`text-3xl font-extrabold tracking-tight ${dark ? "text-white" : "text-slate-900"}`}>
                 Login to your account
               </h1>
-              <p className={`mt-2 text-sm ${dark?"text-white" : "text-slate-500"}`}>
+              <p className={`mt-2 text-sm ${dark ? "text-slate-400" : "text-slate-500"}`}>
                 Welcome back! Please enter your credentials to continue.
               </p>
             </div>
@@ -175,93 +174,100 @@ const SignIn = () => {
             <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
               {/* Firebase error */}
               {firebaseError && (
-                <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-500">
                   {firebaseError}
                 </div>
               )}
 
               {/* Email */}
-            <div>
-            <label className={`mb-1 block text-sm font-semibold ${ dark ? "text-slate-200" : "text-slate-700"
-              }`}
-            >
-            Email Address
-            </label>
-        <div className={`flex items-center rounded-2xl border px-4 transition ${errors.email ? "border-red-400 ring-2 ring-red-100": dark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-white"
-    }`}
-  >
-    <Mail className={`h-5 w-5 ${dark ? "text-slate-500" : "text-slate-400"}`} />
-    <input
-      type="email"
-      placeholder="Enter your email"
-      className={`w-full rounded-2xl bg-transparent px-3 py-3 outline-none placeholder:text-slate-400 ${
-        dark ? "text-white" : "text-slate-800"
-      }`}
-      {...register("email", {
-        required: "Email is required",
-        pattern: {
-          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-          message: "Please enter a valid email address",
-        },
-        })}
-        />
-      </div>
-      {errors.email && (
-        <p className="mt-2 text-sm font-medium text-red-500">
-          {errors.email.message}
-        </p>
-      )}
-            </div>
+              <div>
+                <label className={`mb-1 block text-xs font-mono font-bold uppercase tracking-wider ${dark ? "text-slate-300" : "text-slate-700"}`}>
+                  Email Address
+                </label>
+                <div className={`flex items-center rounded-2xl border px-4 transition ${
+                  errors.email
+                    ? "border-red-500 ring-2 ring-red-500/20"
+                    : dark
+                    ? "border-slate-800 bg-slate-950 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
+                    : "border-slate-200 bg-slate-50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
+                }`}>
+                  <Mail className={`h-5 w-5 ${dark ? "text-slate-500" : "text-slate-400"}`} />
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className={`w-full bg-transparent px-3 py-3.5 outline-none placeholder:text-slate-400 text-sm ${
+                      dark ? "text-white" : "text-slate-800"
+                    }`}
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Please enter a valid email address",
+                      },
+                    })}
+                  />
+                </div>
+                {errors.email && (
+                  <p className="mt-2 text-xs font-medium text-red-500">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
               {/* Password */}
-            <div>
-        <label className={`mb-2 block text-sm font-semibold ${ dark ? "text-slate-200" : "text-slate-700"
-          }`}
-        >
-        Password
-        </label>
-      <div className={`flex items-center rounded-2xl border px-4 transition ${ errors.password ? "border-red-400 ring-2 ring-red-100" : dark ? "border-slate-700 bg-slate-800"  : "border-slate-200 bg-white"
-    }`}
-   >
-    <Lock className={`h-5 w-5 ${dark ? "text-slate-500" : "text-slate-400"}`} />
-    <input
-      type={showPassword ? "text" : "password"}
-      placeholder="Enter your password"
-      className={`w-full bg-transparent px-3 py-3 outline-none placeholder:text-slate-400 ${
-        dark ? "text-white" : "text-slate-800"
-      }`}
-      {...register("password", {
-        required: "Password is required",
-        minLength: {
-          value: 6,
-          message: "Password must be at least 6 characters",
-        },
-      })}
-    />
-    <button
-      type="button"
-      onClick={() => setShowPassword(!showPassword)}
-      className={`transition ${
-        dark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-700"
-      }`}
-    >
-      {showPassword ? (
-        <EyeOff className="h-5 w-5" /> ) : (
-        <Eye className="h-5 w-5" />
-      )}
-      </button>
-    </div>
-    {errors.password && (
-    <p className="mt-2 text-sm font-medium text-red-500">
-      {errors.password.message}
-      </p>
-    )}
-    </div>
-        {/* forgot password */}
-        <div className="flex items-center justify-end">
+              <div>
+                <label className={`mb-1 block text-xs font-mono font-bold uppercase tracking-wider ${dark ? "text-slate-300" : "text-slate-700"}`}>
+                  Password
+                </label>
+                <div className={`flex items-center rounded-2xl border px-4 transition ${
+                  errors.password
+                    ? "border-red-500 ring-2 ring-red-500/20"
+                    : dark
+                    ? "border-slate-800 bg-slate-950 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
+                    : "border-slate-200 bg-slate-50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
+                }`}>
+                  <Lock className={`h-5 w-5 ${dark ? "text-slate-500" : "text-slate-400"}`} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    className={`w-full bg-transparent px-3 py-3.5 outline-none placeholder:text-slate-400 text-sm ${
+                      dark ? "text-white" : "text-slate-800"
+                    }`}
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 6,
+                        message: "Password must be at least 6 characters",
+                      },
+                    })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className={`transition ${
+                      dark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-700"
+                    }`}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="mt-2 text-xs font-medium text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              {/* forgot password */}
+              <div className="flex items-center justify-end">
                 <button
                   type="button"
                   onClick={goToForget}
-                  className="text-sm font-medium text-amber-600 transition hover:text-amber-700 hover:underline dark:text-amber-400"
+                  className="text-xs font-semibold text-primary transition hover:underline"
                 >
                   Forgot password?
                 </button>
@@ -271,7 +277,7 @@ const SignIn = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/25 transition duration-300 hover:-translate-y-0.5 hover:shadow-amber-500/35 disabled:cursor-not-allowed disabled:opacity-70"
+                className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-secondary px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/25 transition duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {loading ? "Logging in..." : "Login"}
                 {!loading && (
@@ -283,7 +289,7 @@ const SignIn = () => {
               <p className="pt-1 text-center text-sm text-slate-600 dark:text-slate-400">
                 Don't have an account?{" "}
                 <Link
-                  className="font-semibold text-amber-600 transition hover:text-amber-700 dark:text-amber-400"
+                  className="font-bold text-primary transition hover:underline"
                   to="/signup"
                 >
                   Register
@@ -291,52 +297,50 @@ const SignIn = () => {
               </p>
 
               {/* divider */}
-             <div className="relative py-1">
-          <div className="absolute inset-0 flex items-center">
-            <div className={`w-full border-t ${ dark ? "border-slate-800" : "border-slate-200"
-              }`}
-            />
-          </div>
-          <div className="relative flex justify-center">
-            <span
-              className={`px-4 text-sm ${
-                dark
-                  ? "bg-slate-900 text-slate-400"
-                  : "bg-white text-slate-500"
-              }`}
-            >
-              Or continue with
-            </span>
-        </div>
-      </div>
+              <div className="relative py-1">
+                <div className="absolute inset-0 flex items-center">
+                  <div className={`w-full border-t ${dark ? "border-slate-800" : "border-slate-200"}`} />
+                </div>
+                <div className="relative flex justify-center">
+                  <span
+                    className={`px-4 text-xs font-mono uppercase tracking-wider ${
+                      dark
+                        ? "bg-slate-900 text-slate-500"
+                        : "bg-white text-slate-400"
+                    }`}
+                  >
+                    Or continue with
+                  </span>
+                </div>
+              </div>
 
               {/* social login */}
-             <div className="grid grid-cols-2 gap-4">
-        <button
-          type="button"
-          onClick={handleGoogleSignIn}
-          className={`flex items-center justify-center gap-3 rounded-2xl border px-4 py-3 font-medium shadow-sm transition hover:-translate-y-0.5 ${
-            dark
-              ? "border-slate-700 bg-slate-800 text-white hover:border-slate-600 hover:bg-slate-700"
-              : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-          }`}
-        >
-        <img src={google} alt="Google" className="h-5 w-5" />
-        <span>Google</span>
-      </button>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  className={`flex items-center justify-center gap-3 rounded-2xl border px-4 py-3 font-semibold text-sm shadow-sm transition hover:scale-[1.02] active:scale-[0.98] ${
+                    dark
+                      ? "border-slate-800 bg-slate-950 text-white hover:bg-slate-800"
+                      : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-white"
+                  }`}
+                >
+                  <img src={google} alt="Google" className="h-5 w-5" />
+                  <span>Google</span>
+                </button>
 
-      <button
-        type="button"
-        onClick={handleGithubSignIn}
-        className={`flex items-center justify-center gap-3 rounded-2xl border px-4 py-3 font-medium shadow-sm transition hover:-translate-y-0.5 ${
-          dark
-            ? "border-slate-700 bg-slate-800 text-white hover:border-slate-600 hover:bg-slate-700"
-            : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-        }`}
-        >
-          <img src={github} alt="GitHub" className="h-5 w-5" />
-          <span>GitHub</span>
-         </button>
+                <button
+                  type="button"
+                  onClick={handleGithubSignIn}
+                  className={`flex items-center justify-center gap-3 rounded-2xl border px-4 py-3 font-semibold text-sm shadow-sm transition hover:scale-[1.02] active:scale-[0.98] ${
+                    dark
+                      ? "border-slate-800 bg-slate-950 text-white hover:bg-slate-800"
+                      : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-white"
+                  }`}
+                >
+                  <img src={github} alt="GitHub" className="h-5 w-5" />
+                  <span>GitHub</span>
+                </button>
               </div>
             </form>
           </div>
@@ -345,4 +349,5 @@ const SignIn = () => {
     </section>
   );
 };
+
 export default SignIn;
