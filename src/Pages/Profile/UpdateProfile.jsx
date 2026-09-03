@@ -51,7 +51,7 @@ const UpdateProfile = () => {
   };
 
   const inputClass = (error) =>
-    `w-full bg-transparent py-3 px-3 outline-none text-sm ${
+    `w-full bg-transparent py-3.5 px-3 outline-none text-sm ${
       dark ? "text-white" : "text-slate-800"
     } ${error ? "" : "placeholder:text-slate-400"}`;
 
@@ -59,18 +59,18 @@ const UpdateProfile = () => {
     <section
       className={`min-h-[calc(100vh-4.5rem)] px-4 py-10 transition-all duration-500 flex items-center justify-center ${
         dark
-          ? "bg-[#050816]"
-          : "bg-gradient-to-br from-slate-50 via-white to-blue-50"
+          ? "bg-base-100"
+          : "bg-gradient-to-br from-slate-50 via-white to-purple-50/30"
       }`}
     >
       <div className="w-full max-w-5xl mx-auto">
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className={`flex items-center gap-2 mb-6 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:scale-[1.02] border ${
+          className={`flex items-center gap-2 mb-6 px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-[1.02] border ${
             dark
-              ? "border-slate-800 text-slate-300 bg-slate-900/40 hover:bg-slate-900/80"
-              : "border-slate-200 text-slate-700 bg-white/50 hover:bg-white"
+              ? "border-slate-800 text-slate-300 bg-slate-900/60 hover:bg-slate-900"
+              : "border-slate-200 text-slate-700 bg-white hover:bg-slate-50"
           }`}
         >
           <ArrowLeft size={16} />
@@ -86,10 +86,10 @@ const UpdateProfile = () => {
             className="lg:col-span-5 flex flex-col justify-between"
           >
             <div
-              className={`h-full rounded-4xl border p-8 flex flex-col items-center justify-center text-center shadow-xl backdrop-blur-xl transition duration-500 ${
+              className={`h-full rounded-3xl border p-8 flex flex-col items-center justify-center text-center shadow-xl backdrop-blur-xl transition duration-500 ${
                 dark
-                  ? "border-slate-700 bg-slate-900/70 text-white"
-                  : "border-white/70 bg-white/80 text-slate-800"
+                  ? "border-slate-800 bg-slate-900/70 text-white"
+                  : "border-slate-200 bg-white/90 text-slate-800"
               }`}
             >
               {/* Profile Image with Dynamic Hover Effect */}
@@ -108,11 +108,11 @@ const UpdateProfile = () => {
               </div>
 
               {/* User Info */}
-              <h2 className="text-2xl font-bold tracking-tight truncate max-w-full">
+              <h2 className="text-2xl font-extrabold tracking-tight truncate max-w-full">
                 {user?.displayName || "User Name"}
               </h2>
               <p
-                className={`text-sm mt-1 mb-4 font-medium ${
+                className={`text-xs font-mono mt-1 mb-4 ${
                   dark ? "text-slate-400" : "text-slate-500"
                 }`}
               >
@@ -121,11 +121,7 @@ const UpdateProfile = () => {
 
               {/* Status Badge */}
               <div
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide ${
-                  dark
-                    ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/25"
-                    : "bg-emerald-50 text-emerald-600 border border-emerald-100"
-                }`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-primary/15 text-primary border border-primary/25"
               >
                 <Shield size={14} />
                 <span>Verified Account</span>
@@ -140,13 +136,13 @@ const UpdateProfile = () => {
               <div className="text-left w-full space-y-3.5">
                 <div>
                   <span
-                    className={`block text-[11px] font-bold uppercase tracking-wider ${
+                    className={`block text-[11px] font-mono font-bold uppercase tracking-wider ${
                       dark ? "text-slate-500" : "text-slate-400"
                     }`}
                   >
                     User UID
                   </span>
-                  <span className="font-mono text-xs font-semibold block truncate select-all bg-base-200 p-2.5 rounded-xl border border-base-300 mt-1">
+                  <span className="font-mono text-xs font-semibold block truncate select-all bg-base-200 dark:bg-slate-950 p-3 rounded-xl border border-base-300 dark:border-slate-800 mt-1">
                     {user?.uid}
                   </span>
                 </div>
@@ -162,15 +158,15 @@ const UpdateProfile = () => {
             className="lg:col-span-7"
           >
             <div
-              className={`rounded-4xl border p-6 shadow-xl backdrop-blur-xl sm:p-8 transition-all duration-500 ${
+              className={`rounded-3xl border p-6 shadow-xl backdrop-blur-xl sm:p-8 transition-all duration-500 ${
                 dark
-                  ? "border-slate-700 bg-slate-900/70"
-                  : "border-white/70 bg-white/80"
+                  ? "border-slate-800 bg-slate-900/80"
+                  : "border-slate-200 bg-white/90"
               }`}
             >
               <div className="mb-6">
                 <h1
-                  className={`text-3xl font-bold tracking-tight ${
+                  className={`text-3xl font-extrabold tracking-tight ${
                     dark ? "text-white" : "text-slate-900"
                   }`}
                 >
@@ -189,8 +185,8 @@ const UpdateProfile = () => {
                 {/* Full Name */}
                 <div>
                   <label
-                    className={`mb-1 block text-sm font-semibold ${
-                      dark ? "text-slate-200" : "text-slate-700"
+                    className={`mb-1 block text-xs font-mono font-bold uppercase tracking-wider ${
+                      dark ? "text-slate-300" : "text-slate-700"
                     }`}
                   >
                     Full Name
@@ -198,10 +194,10 @@ const UpdateProfile = () => {
                   <div
                     className={`flex items-center rounded-2xl border px-4 transition ${
                       errors.name
-                        ? "border-red-400 ring-2 ring-red-100"
+                        ? "border-red-500 ring-2 ring-red-500/20"
                         : dark
-                        ? "border-slate-700 bg-slate-800/50 focus-within:border-primary"
-                        : "border-slate-200 bg-white focus-within:border-primary"
+                        ? "border-slate-800 bg-slate-950 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
+                        : "border-slate-200 bg-slate-50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
                     }`}
                   >
                     <User
@@ -232,8 +228,8 @@ const UpdateProfile = () => {
                 {/* Photo URL */}
                 <div>
                   <label
-                    className={`mb-1 block text-sm font-semibold ${
-                      dark ? "text-slate-200" : "text-slate-700"
+                    className={`mb-1 block text-xs font-mono font-bold uppercase tracking-wider ${
+                      dark ? "text-slate-300" : "text-slate-700"
                     }`}
                   >
                     Photo URL
@@ -241,10 +237,10 @@ const UpdateProfile = () => {
                   <div
                     className={`flex items-center rounded-2xl border px-4 transition ${
                       errors.photo
-                        ? "border-red-400 ring-2 ring-red-100"
+                        ? "border-red-500 ring-2 ring-red-500/20"
                         : dark
-                        ? "border-slate-700 bg-slate-800/50 focus-within:border-primary"
-                        : "border-slate-200 bg-white focus-within:border-primary"
+                        ? "border-slate-800 bg-slate-950 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
+                        : "border-slate-200 bg-slate-50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
                     }`}
                   >
                     <ImageIcon
@@ -276,18 +272,14 @@ const UpdateProfile = () => {
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <label
-                      className={`block text-sm font-semibold ${
-                        dark ? "text-slate-200" : "text-slate-700"
+                      className={`block text-xs font-mono font-bold uppercase tracking-wider ${
+                        dark ? "text-slate-300" : "text-slate-700"
                       }`}
                     >
                       Email Address
                     </label>
                     <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
-                        dark
-                          ? "bg-slate-800/50 text-slate-500 border-slate-700"
-                          : "bg-slate-100 text-slate-400 border-slate-200"
-                      }`}
+                      className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border border-slate-700 bg-slate-800/50 text-slate-400"
                     >
                       Read Only
                     </span>
@@ -295,8 +287,8 @@ const UpdateProfile = () => {
                   <div
                     className={`flex items-center rounded-2xl border px-4 cursor-not-allowed ${
                       dark
-                        ? "border-slate-800 bg-slate-900/40 text-slate-500"
-                        : "border-slate-200 bg-slate-50 text-slate-400"
+                        ? "border-slate-800 bg-slate-950/60 text-slate-500"
+                        : "border-slate-200 bg-slate-100 text-slate-400"
                     }`}
                   >
                     <Mail className="h-5 w-5" />
@@ -304,7 +296,7 @@ const UpdateProfile = () => {
                       type="email"
                       value={user?.email || ""}
                       disabled
-                      className="w-full bg-transparent py-3 px-3 outline-none text-sm cursor-not-allowed opacity-80"
+                      className="w-full bg-transparent py-3.5 px-3 outline-none text-sm cursor-not-allowed font-mono opacity-80"
                     />
                   </div>
                 </div>
@@ -313,7 +305,7 @@ const UpdateProfile = () => {
                 <button
                   type="submit"
                   disabled={updating}
-                  className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 via-indigo-600 to-violet-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition duration-300 hover:-translate-y-0.5 hover:shadow-blue-500/30 disabled:cursor-not-allowed disabled:opacity-70 mt-6"
+                  className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-secondary px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/25 transition duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 mt-6"
                 >
                   <Save size={16} />
                   <span>{updating ? "Saving Changes..." : "Save Changes"}</span>
