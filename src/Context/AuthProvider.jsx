@@ -14,6 +14,22 @@ import app from "../Firebase/Firebase.init";
 
 export const AuthContext = createContext(null);
 
+// ─── DEV BYPASS ────────────────────────────────────────────────────────────────
+// Set to true to skip Firebase authentication during development.
+// All PrivateRoutes will pass and you'll appear as a logged-in mock user.
+// Set back to false (or remove) before deploying to production.
+const DEV_BYPASS_AUTH = true;
+
+const MOCK_USER = {
+  uid: "dev-user-001",
+  email: "dev@paymenttrack.app",
+  displayName: "Zabed (Dev)",
+  photoURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80",
+  emailVerified: true,
+  role: "admin",
+};
+// ───────────────────────────────────────────────────────────────────────────────
+
 let auth = null;
 if (app) {
   try {
@@ -24,8 +40,8 @@ if (app) {
 }
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(DEV_BYPASS_AUTH ? MOCK_USER : null);
+  const [loading, setLoading] = useState(!DEV_BYPASS_AUTH);
 
   const googleProvider = new GoogleAuthProvider();
   const githubProvider = new GithubAuthProvider();
@@ -75,9 +91,12 @@ const AuthProvider = ({ children }) => {
   };
 
   const logOut = () => {
-    setLoading(true);
+    setLoading(false);
+    if (DEV_BYPASS_AUTH) {
+      setUser(MOCK_USER);
+      return Promise.resolve();
+    }
     if (!auth) {
-      setLoading(false);
       setUser(null);
       return Promise.resolve();
     }
@@ -97,6 +116,9 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    // Skip real Firebase listener in dev bypass mode
+    if (DEV_BYPASS_AUTH) return;
+
     if (!auth) {
       setUser(null);
       setLoading(false);
