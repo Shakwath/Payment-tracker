@@ -1,5 +1,6 @@
-import { Clock, CheckCircle2, FileText } from "lucide-react";
+import { Clock, CheckCircle2 } from "lucide-react";
 import { INITIAL_PAYMENTS } from "../../../data/mockData";
+import { ReceiptActions } from "../../../Components/Receipt/DownloadReceiptButton";
 
 const GuardianPaymentHistoryPage = () => {
   return (
@@ -26,6 +27,7 @@ const GuardianPaymentHistoryPage = () => {
               <th className="py-4 px-6">Date</th>
               <th className="py-4 px-6">Amount</th>
               <th className="py-4 px-6 text-right">Status</th>
+              <th className="py-4 px-6 text-right">Receipt</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200/70 dark:divide-slate-800/70">
@@ -41,6 +43,11 @@ const GuardianPaymentHistoryPage = () => {
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 font-mono font-bold text-[10px]">
                     <CheckCircle2 className="h-3 w-3" /> {p.status}
                   </span>
+                </td>
+                <td className="py-4 px-6">
+                  <div className="flex justify-end">
+                    <ReceiptActions payment={p} showLabel={false} />
+                  </div>
                 </td>
               </tr>
             ))}

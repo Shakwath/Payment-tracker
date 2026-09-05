@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { CreditCard, Search, Download, CheckCircle2, FileText, X, Filter } from "lucide-react";
+import { CreditCard, Search, CheckCircle2, FileText, X, Filter } from "lucide-react";
 import { INITIAL_PAYMENTS } from "../../../data/mockData";
+import { ReceiptActions } from "../../../Components/Receipt/DownloadReceiptButton";
+import DownloadReceiptButton, { PreviewReceiptButton } from "../../../Components/Receipt/DownloadReceiptButton";
 
 const PaymentsPage = () => {
   const [payments, setPayments] = useState(INITIAL_PAYMENTS);
@@ -104,13 +106,16 @@ const PaymentsPage = () => {
                     </span>
                   </td>
                   <td className="py-4 px-6 text-right">
-                    <button
-                      onClick={() => setSelectedReceipt(p)}
-                      className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-primary/10 text-primary transition"
-                      title="View Receipt"
-                    >
-                      <FileText className="h-4 w-4" />
-                    </button>
+                    <div className="flex items-center justify-end gap-2">
+                      <ReceiptActions payment={p} showLabel={false} />
+                      <button
+                        onClick={() => setSelectedReceipt(p)}
+                        className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-base-content/60 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                        title="View Details"
+                      >
+                        <FileText className="h-4 w-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -165,12 +170,10 @@ const PaymentsPage = () => {
               </div>
             </div>
 
-            <button
-              onClick={() => alert("Simulated Receipt Print / PDF Downloaded!")}
-              className="w-full py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition flex items-center justify-center gap-2"
-            >
-              <Download className="h-4 w-4" /> Download PDF Receipt
-            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <PreviewReceiptButton payment={selectedReceipt} />
+              <DownloadReceiptButton payment={selectedReceipt} />
+            </div>
           </div>
         </div>
       )}
