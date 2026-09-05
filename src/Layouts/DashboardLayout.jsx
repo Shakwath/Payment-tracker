@@ -7,11 +7,8 @@ import {
   Sun,
   Moon,
   Search,
-  ChevronRight,
   Shield,
-  UserCheck,
   GraduationCap,
-  Mail,
   Command,
 } from "lucide-react";
 
@@ -52,7 +49,7 @@ const DashboardLayout = () => {
 
   const roleIcons = {
     admin: Shield,
-    guardian: UserCheck,
+    student: GraduationCap,
     teacher: GraduationCap,
   };
   const ActiveRoleIcon = roleIcons[role] || Shield;

@@ -349,6 +349,35 @@ export const INITIAL_PAYMENTS = [
     date: "2026-02-10 09:40 AM",
     feeType: "Monthly Tuition Fee - Feb",
     status: "Successful"
+  },
+  {
+
+    id: "PAY-9005",
+    trxId: "BK-9912048",
+    studentName: "Nusrat Jahan",
+    guardianName: "Farhana Begum",
+    class: "Grade 10",
+    amount: 4500,
+    method: "bKash",
+    date: "2026-03-04 04:30 PM",
+    feeType: "Monthly Tuition Fee - March",
+    status: "Pending",
+    proofImage: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=400&q=80",
+    notes: "Reference ID typed by parent matches bKash SMS counter."
+  },
+  {
+    id: "PAY-9006",
+    trxId: "BNK-449102",
+    studentName: "Tanvir Ahmed",
+    guardianName: "Khorshed Alam",
+    class: "Grade 9",
+    amount: 9000,
+    method: "Bank Wire",
+    date: "2026-03-05 09:10 AM",
+    feeType: "Monthly Tuition Fee - Feb + March",
+    status: "Pending",
+    proofImage: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=400&q=80",
+    notes: "Deposit slip uploaded for 2 months overdue tuition."
   }
 ];
 

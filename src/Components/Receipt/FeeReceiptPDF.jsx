@@ -104,6 +104,8 @@ const styles = StyleSheet.create({
     padding: 14,
     borderWidth: 1,
     borderColor: "#E5E7EB",
+    position: "relative",
+    overflow: "hidden",
   },
   infoCardTitle: {
     fontSize: 7,
@@ -293,8 +295,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 
-  // Watermark stamp — full-page centered diagonal overlay
-  stampContainer: {
+  // Watermark stamp restricted to Payment Information card
+  cardStampContainer: {
     position: "absolute",
     top: 0,
     left: 0,
@@ -303,24 +305,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  stampInner: {
-    transform: "rotate(-35deg)",
-    opacity: 0.1,
-    borderWidth: 10,
+  cardStampInner: {
+    transform: "rotate(-18deg)",
+    opacity: 0.18,
+    borderWidth: 3,
     borderColor: "#9603F8",
-    borderRadius: 12,
-    paddingVertical: 20,
-    paddingHorizontal: 40,
+    borderRadius: 6,
+    paddingVertical: 5,
+    paddingHorizontal: 16,
   },
-  stampText: {
-    fontSize: 120,
+  cardStampText: {
+    fontSize: 34,
     fontFamily: "Helvetica-Bold",
     color: "#9603F8",
-    letterSpacing: 18,
+    letterSpacing: 4,
   },
 });
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
 function getStatusColors(status) {
   const s = status?.toLowerCase();
   if (s === "successful" || s === "verified" || s === "paid")
@@ -328,6 +329,17 @@ function getStatusColors(status) {
   if (s === "pending") return { bg: "#FEF3C7", text: "#92400E" };
   if (s === "failed" || s === "rejected") return { bg: "#FEE2E2", text: "#991B1B" };
   return { bg: "#E5E7EB", text: "#374151" };
+}
+
+function getStampInfo(status) {
+  const s = status?.toLowerCase();
+  if (s === "rejected" || s === "failed") {
+    return { text: "REJECTED", color: "#DC2626", borderColor: "#EF4444" };
+  }
+  if (s === "pending") {
+    return { text: "PENDING", color: "#D97706", borderColor: "#F59E0B" };
+  }
+  return { text: "PAID", color: "#9603F8", borderColor: "#9603F8" };
 }
 
 function formatCurrency(amount) {
@@ -364,8 +376,12 @@ const FeeReceiptPDF = ({ payment }) => {
   } = payment;
 
   const statusColors = getStatusColors(status);
+  const stampInfo = getStampInfo(status);
   const lineItems = [{ description: feeType, amount }];
   const subtotal = lineItems.reduce((s, i) => s + Number(i.amount), 0);
+  const statusLower = status.toLowerCase();
+  const isRejected = statusLower === "rejected" || statusLower === "failed";
+  const isPending = statusLower === "pending";
 
   return (
     <Document
@@ -375,13 +391,6 @@ const FeeReceiptPDF = ({ payment }) => {
       creator="PaymentTrack System"
     >
       <Page size="A4" style={styles.page}>
-
-        {/* ── Watermark — full-page diagonal PAID stamp ── */}
-        <View style={styles.stampContainer}>
-          <View style={styles.stampInner}>
-            <Text style={styles.stampText}>PAID</Text>
-          </View>
-        </View>
 
         {/* ── Header ── */}
         <View style={styles.headerBand}>
@@ -442,8 +451,16 @@ const FeeReceiptPDF = ({ payment }) => {
               </View>
             </View>
 
-            {/* Payment Info */}
+            {/* Payment Info with localized dynamic stamp */}
             <View style={styles.infoCard}>
+              <View style={styles.cardStampContainer}>
+                <View style={[styles.cardStampInner, { borderColor: stampInfo.borderColor }]}>
+                  <Text style={[styles.cardStampText, { color: stampInfo.color }]}>
+                    {stampInfo.text}
+                  </Text>
+                </View>
+              </View>
+
               <Text style={styles.infoCardTitle}>PAYMENT INFORMATION</Text>
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Date & Time</Text>
@@ -488,9 +505,20 @@ const FeeReceiptPDF = ({ payment }) => {
                 </Text>
               </View>
             ))}
-            <View style={styles.totalBar}>
-              <Text style={styles.totalLabel}>Total Amount Paid</Text>
-              <Text style={styles.totalAmount}>{formatCurrency(subtotal)}</Text>
+            <View style={[
+              styles.totalBar,
+              isRejected ? { backgroundColor: "#FEE2E2" } : isPending ? { backgroundColor: "#FEF3C7" } : {}
+            ]}>
+              <Text style={[
+                styles.totalLabel,
+                isRejected ? { color: "#991B1B" } : isPending ? { color: "#92400E" } : {}
+              ]}>
+                {isRejected ? "Total Amount (Rejected)" : isPending ? "Total Amount (Pending)" : "Total Amount Paid"}
+              </Text>
+              <Text style={[
+                styles.totalAmount,
+                isRejected ? { color: "#DC2626" } : isPending ? { color: "#D97706" } : {}
+              ]}>{formatCurrency(subtotal)}</Text>
             </View>
           </View>
 
@@ -506,10 +534,18 @@ const FeeReceiptPDF = ({ payment }) => {
               </View>
             </View>
             <View style={styles.methodCard}>
-              <View style={[styles.methodDot, { backgroundColor: "#10B981" }]} />
+              <View style={[
+                styles.methodDot,
+                { backgroundColor: isRejected ? "#EF4444" : isPending ? "#F59E0B" : "#10B981" }
+              ]} />
               <View>
-                <Text style={styles.methodLabel}>AMOUNT RECEIVED</Text>
-                <Text style={[styles.methodValue, { color: "#065F46" }]}>
+                <Text style={styles.methodLabel}>
+                  {isRejected ? "AMOUNT REJECTED" : isPending ? "AMOUNT PENDING" : "AMOUNT RECEIVED"}
+                </Text>
+                <Text style={[
+                  styles.methodValue,
+                  { color: isRejected ? "#991B1B" : isPending ? "#92400E" : "#065F46" }
+                ]}>
                   {formatCurrency(subtotal)}
                 </Text>
               </View>
@@ -526,28 +562,29 @@ const FeeReceiptPDF = ({ payment }) => {
           {/* Important Note */}
           <View
             style={{
-              backgroundColor: "#F3E8FF",
+              backgroundColor: isRejected ? "#FEE2E2" : isPending ? "#FEF3C7" : "#F3E8FF",
               borderRadius: 6,
               padding: 10,
               borderLeftWidth: 3,
-              borderLeftColor: "#9603F8",
+              borderLeftColor: isRejected ? "#EF4444" : isPending ? "#F59E0B" : "#9603F8",
             }}
           >
             <Text
               style={{
                 fontSize: 7,
-                color: "#5B21B6",
+                color: isRejected ? "#991B1B" : isPending ? "#92400E" : "#5B21B6",
                 fontFamily: "Helvetica-Bold",
                 marginBottom: 3,
               }}
             >
               IMPORTANT NOTE
             </Text>
-            <Text style={{ fontSize: 7.5, color: "#6D28D9", lineHeight: 1.5 }}>
-              This is an official digital receipt generated by the PaymentTrack
-              system. Please retain this document for your records. For any
-              discrepancies, contact the accounts department with your Receipt ID:{" "}
-              {id}.
+            <Text style={{ fontSize: 7.5, color: isRejected ? "#7F1D1D" : isPending ? "#78350F" : "#6D28D9", lineHeight: 1.5 }}>
+              {isRejected
+                ? `Notice: This payment transaction (${id}) was REJECTED by the accounts department. Please contact support or resubmit valid payment proof.`
+                : isPending
+                ? `Notice: This payment transaction (${id}) is pending administrative verification. Status will update once reviewed.`
+                : `This is an official digital receipt generated by the PaymentTrack system. Please retain this document for your records. For any discrepancies, contact the accounts department with your Receipt ID: ${id}.`}
             </Text>
           </View>
         </View>
@@ -564,7 +601,12 @@ const FeeReceiptPDF = ({ payment }) => {
             </Text>
           </View>
           <View style={styles.footerRight}>
-            <Text style={styles.authorizedText}>AUTHORIZED RECEIPT</Text>
+            <Text style={[
+              styles.authorizedText,
+              isRejected ? { color: "#DC2626" } : isPending ? { color: "#D97706" } : {}
+            ]}>
+              {isRejected ? "REJECTED RECORD" : isPending ? "PENDING VERIFICATION" : "AUTHORIZED RECEIPT"}
+            </Text>
             <Text style={styles.footerDate}>Generated: {generateDate()}</Text>
           </View>
         </View>

@@ -65,7 +65,7 @@ const DownloadReceiptButton = ({
     >
       {({ loading }) => (
         <button
-          className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-bold text-sm transition-all duration-200
+          className={`w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200
             ${
               loading
                 ? "bg-purple-100 dark:bg-purple-950/40 text-purple-400 cursor-not-allowed"
@@ -80,7 +80,7 @@ const DownloadReceiptButton = ({
           ) : (
             <>
               <Download className="h-4 w-4" />
-              <span>Download PDF Receipt</span>
+              <span>Download PDF</span>
             </>
           )}
         </button>
@@ -102,7 +102,7 @@ export const PreviewReceiptButton = ({ payment, className = "" }) => {
             if (url) window.open(url, "_blank", "noopener,noreferrer");
           }}
           disabled={loading}
-          className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-bold text-sm transition-all duration-200
+          className={`w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200
             border-2 border-[#9603F8] text-[#9603F8] hover:bg-[#9603F8] hover:text-white
             disabled:opacity-50 disabled:cursor-not-allowed
             hover:shadow-lg hover:shadow-purple-500/25 hover:-translate-y-0.5 active:translate-y-0
