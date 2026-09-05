@@ -115,77 +115,95 @@ const StudentsPage = () => {
   const totalDuesAmount = students.reduce((acc, curr) => acc + curr.dues, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-6 font-sans">
       
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm">
+      {/* Donezo Style Top Header Row */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-primary font-mono text-xs font-bold uppercase mb-1">
-            <Users className="h-4 w-4" />
-            <span>People Management</span>
-          </div>
-          <h1 className="text-2xl font-black text-base-content tracking-tight">
+          <h1 className="text-3xl font-black text-base-content tracking-tight">
             Student & Guardian Records
           </h1>
-          <p className="text-xs text-base-content/60 mt-0.5">
+          <p className="text-xs text-base-content/60 mt-1">
             Manage enrolled students along with their linked parent/guardian contact & fee metrics.
           </p>
         </div>
 
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-primary text-white text-xs font-bold shadow-md shadow-primary/20 hover:bg-primary/90 transition"
+          className="px-5 py-2.5 rounded-2xl bg-primary text-white text-xs font-bold shadow-md shadow-primary/20 hover:bg-primary/90 transition flex items-center gap-2 self-start md:self-center"
         >
           <UserPlus className="h-4 w-4" />
           <span>Add New Student</span>
         </button>
       </div>
 
-      {/* Overview Stat Cards */}
+      {/* Overview Stat Cards (Matching Donezo Style) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+        
+        {/* Card 1: Solid Vibrant Theme Primary Accent Card */}
+        <div className="p-6 rounded-[28px] bg-gradient-to-br from-primary via-purple-600 to-purple-800 text-white shadow-xl shadow-primary/20 flex flex-col justify-between">
           <div className="flex justify-between items-start">
-            <span className="text-xs font-mono font-bold uppercase text-base-content/60">Total Enrolled</span>
-            <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-white/80">Total Enrolled</span>
+            <div className="h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center text-white transition cursor-pointer">
               <Users className="h-4 w-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-base-content mt-2">{totalStudents}</p>
-          <span className="text-[11px] text-emerald-500 font-bold mt-1 inline-block">Active Roster</span>
+          <div className="my-4">
+            <p className="text-4xl font-black tracking-tight">{totalStudents}</p>
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 text-white text-[11px] font-mono font-bold self-start backdrop-blur-md">
+            <span>Active Roster</span>
+          </div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+        {/* Card 2: White Card */}
+        <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
           <div className="flex justify-between items-start">
-            <span className="text-xs font-mono font-bold uppercase text-base-content/60">Fees Cleared</span>
-            <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-base-content/60">Fees Cleared</span>
+            <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary/10 text-base-content/70 hover:text-primary transition flex items-center justify-center cursor-pointer">
               <CheckCircle2 className="h-4 w-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-base-content mt-2">{paidCount} Students</p>
-          <span className="text-[11px] text-emerald-500 font-bold mt-1 inline-block">Current Term</span>
+          <div className="my-4">
+            <p className="text-4xl font-black text-base-content tracking-tight">{paidCount}</p>
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-emerald-500 text-[11px] font-mono font-bold self-start">
+            <span>Current Term</span>
+          </div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+        {/* Card 3: White Card */}
+        <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
           <div className="flex justify-between items-start">
-            <span className="text-xs font-mono font-bold uppercase text-base-content/60">Pending Dues</span>
-            <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-base-content/60">Pending Dues</span>
+            <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary/10 text-base-content/70 hover:text-primary transition flex items-center justify-center cursor-pointer">
               <Clock className="h-4 w-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-base-content mt-2">{pendingCount} Students</p>
-          <span className="text-[11px] text-amber-500 font-bold mt-1 inline-block">Notice Sent</span>
+          <div className="my-4">
+            <p className="text-4xl font-black text-base-content tracking-tight">{pendingCount}</p>
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-amber-500 text-[11px] font-mono font-bold self-start">
+            <span>Notice Sent</span>
+          </div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+        {/* Card 4: White Card */}
+        <div className="p-6 rounded-[28px] bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
           <div className="flex justify-between items-start">
-            <span className="text-xs font-mono font-bold uppercase text-base-content/60">Total Outstanding</span>
-            <div className="p-2.5 rounded-xl bg-rose-500/10 text-rose-500">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-base-content/60">Total Outstanding</span>
+            <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary/10 text-base-content/70 hover:text-primary transition flex items-center justify-center cursor-pointer">
               <AlertCircle className="h-4 w-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-base-content mt-2">৳ {totalDuesAmount.toLocaleString()}</p>
-          <span className="text-[11px] text-rose-500 font-bold mt-1 inline-block">Uncollected Balance</span>
+          <div className="my-4">
+            <p className="text-4xl font-black text-base-content tracking-tight">৳ {totalDuesAmount.toLocaleString()}</p>
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-rose-500 text-[11px] font-mono font-bold self-start">
+            <span>Uncollected</span>
+          </div>
         </div>
+
       </div>
 
       {/* Filter and Search Bar */}

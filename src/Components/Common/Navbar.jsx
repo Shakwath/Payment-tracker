@@ -75,15 +75,6 @@ const Navbar = () => {
       <NavLink to="/" className={linkClass}>
         <span>Home</span>
       </NavLink>
-      <NavLink to="/dashboard" className={linkClass}>
-        <span>Dashboard</span>
-      </NavLink>
-      <NavLink to="/payment" className={linkClass}>
-        <span>Payment</span>
-      </NavLink>
-      <NavLink to="/payment-history" className={linkClass}>
-        <span>History</span>
-      </NavLink>
       <NavLink to="/about" className={linkClass}>
         <span>About</span>
       </NavLink>
