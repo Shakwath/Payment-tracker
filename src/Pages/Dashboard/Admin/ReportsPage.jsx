@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BarChart3, Download, TrendingUp, PieChart as PieIcon } from "lucide-react";
+import toast from "react-hot-toast";
 import {
   ResponsiveContainer,
   BarChart,
@@ -47,7 +48,7 @@ const ReportsPage = () => {
         </div>
 
         <button
-          onClick={() => alert("Simulated CSV/PDF Financial Summary Exported!")}
+          onClick={() => toast.success("Annual report exported successfully!")}
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-primary text-white text-xs font-bold shadow-md shadow-primary/20 hover:bg-primary/90 transition"
         >
           <Download className="h-4 w-4" />
@@ -102,9 +103,23 @@ const ReportsPage = () => {
           <div className="h-72 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={MONTHLY_REVENUE_COMPARISON} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} tickFormatter={(v) => `৳${v / 1000}k`} />
+                <defs>
+                  <linearGradient id="tuitionGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#9603F8" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#7805F5" stopOpacity={0.7} />
+                  </linearGradient>
+                  <linearGradient id="labGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#06B6D4" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#0891B2" stopOpacity={0.7} />
+                  </linearGradient>
+                  <linearGradient id="examGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#10B981" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#059669" stopOpacity={0.7} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="4 4" opacity={0.15} vertical={false} />
+                <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `৳${v / 1000}k`} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#0f172a",
@@ -116,9 +131,9 @@ const ReportsPage = () => {
                   formatter={(val) => [`৳ ${Number(val).toLocaleString()}`, ""]}
                 />
                 <Legend wrapperStyle={{ fontSize: "11px", paddingTop: "10px" }} />
-                <Bar dataKey="tuition" name="Tuition Fee" fill="#6366f1" radius={[4, 4, 0, 0]} stackId="a" />
-                <Bar dataKey="lab" name="Lab Fee" fill="#06b6d4" radius={[4, 4, 0, 0]} stackId="a" />
-                <Bar dataKey="exam" name="Exam Fee" fill="#10b981" radius={[4, 4, 0, 0]} stackId="a" />
+                <Bar dataKey="tuition" name="Tuition Fee" fill="url(#tuitionGrad)" radius={[6, 6, 0, 0]} stackId="a" />
+                <Bar dataKey="lab" name="Lab Fee" fill="url(#labGrad)" radius={[6, 6, 0, 0]} stackId="a" />
+                <Bar dataKey="exam" name="Exam Fee" fill="url(#examGrad)" radius={[6, 6, 0, 0]} stackId="a" />
               </BarChart>
             </ResponsiveContainer>
           </div>

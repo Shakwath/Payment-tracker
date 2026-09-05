@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Clock, Check, X, Eye, FileCheck, AlertCircle } from "lucide-react";
+import { Clock, Check, X, Eye, FileCheck } from "lucide-react";
 import { INITIAL_PENDING_VERIFICATIONS } from "../../../data/mockData";
+import toast from "react-hot-toast";
 
 const PendingVerificationPage = () => {
   const [verifications, setVerifications] = useState(INITIAL_PENDING_VERIFICATIONS);
@@ -8,12 +9,12 @@ const PendingVerificationPage = () => {
 
   const handleApprove = (id) => {
     setVerifications(verifications.filter((item) => item.id !== id));
-    alert(`Payment verification #${id} approved! Ledger updated.`);
+    toast.success(`Payment #${id} approved! Ledger updated.`);
   };
 
   const handleReject = (id) => {
     setVerifications(verifications.filter((item) => item.id !== id));
-    alert(`Payment verification #${id} rejected. Parent notified.`);
+    toast.error(`Payment #${id} rejected. Student notified.`);
   };
 
   return (

@@ -29,12 +29,22 @@ import useAuth from "../../Hooks/useAuth";
 const ROLE_NAV_GROUPS = {
   admin: [
     {
-      category: "MENU",
+      category: "OVERVIEW",
       items: [
         { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+      ],
+    },
+    {
+      category: "PEOPLE MANAGEMENT",
+      items: [
         { label: "Students", path: "/dashboard/students", icon: Users, badge: "124" },
         { label: "Guardians", path: "/dashboard/guardians", icon: UserCheck },
         { label: "Teachers", path: "/dashboard/teachers", icon: GraduationCap },
+      ],
+    },
+    {
+      category: "ACADEMIC MANAGEMENT",
+      items: [
         { label: "Semesters", path: "/dashboard/semesters", icon: CalendarDays },
       ],
     },
@@ -43,31 +53,39 @@ const ROLE_NAV_GROUPS = {
       items: [
         { label: "Fee Structure", path: "/dashboard/fee-management", icon: Receipt },
         { label: "Payments Ledger", path: "/dashboard/payments", icon: CreditCard },
-        { label: "Pending Verification", path: "/dashboard/pending-verification", icon: Clock, badge: "2" },
         { label: "Expenses Log", path: "/dashboard/expenses", icon: TrendingDown },
         { label: "Teacher Payroll", path: "/dashboard/teacher-salaries", icon: DollarSign },
       ],
     },
     {
-      category: "GENERAL",
+      category: "REPORTS & MONITORING",
       items: [
         { label: "Reports", path: "/dashboard/reports", icon: BarChart3 },
         { label: "Audit Logs", path: "/dashboard/audit-logs", icon: ShieldCheck },
+      ],
+    },
+    {
+      category: "COMMUNICATION",
+      items: [
         { label: "Notifications", path: "/dashboard/notifications", icon: Bell },
+      ],
+    },
+    {
+      category: "SYSTEM",
+      items: [
         { label: "Settings", path: "/dashboard/settings", icon: Settings },
       ],
     },
   ],
 
-  guardian: [
+  student: [
     {
       category: "MENU",
       items: [
         { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-        { label: "My Students", path: "/dashboard/my-students", icon: Users, badge: "2" },
         { label: "Pay Fees", path: "/dashboard/pay-fees", icon: CreditCard },
         { label: "Payment History", path: "/dashboard/payment-history", icon: Clock },
-        { label: "Receipts", path: "/dashboard/receipts", icon: FileText },
+        { label: "Fee Receipts", path: "/dashboard/receipts", icon: FileText },
       ],
     },
     {
@@ -107,7 +125,7 @@ const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
 
   const roleLabels = {
     admin: "Admin Console",
-    guardian: "Guardian Portal",
+    student: "Student Portal",
     teacher: "Teacher Hub",
   };
 
@@ -117,7 +135,7 @@ const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
         collapsed ? "w-20" : "w-64 sm:w-72"
       }`}
     >
-      {/* Brand Header (Matching Donezo Logo Aesthetic) */}
+      {/* Brand Header */}
       <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800">
         <Link to="/" className="flex items-center gap-3 overflow-hidden">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary text-white shadow-md shadow-primary/25">
@@ -153,7 +171,7 @@ const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
             </span>
           </div>
           <div className="grid grid-cols-3 gap-1 bg-white dark:bg-slate-900 p-1 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner">
-            {["admin", "guardian", "teacher"].map((role) => (
+            {["admin", "student", "teacher"].map((role) => (
               <button
                 key={role}
                 onClick={() => onRoleChange && onRoleChange(role)}
@@ -170,7 +188,7 @@ const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
         </div>
       )}
 
-      {/* Categorized Navigation with Left Vertical Pill Indicator (Exact Donezo Style) */}
+      {/* Categorized Navigation */}
       <div className="flex-1 overflow-y-auto px-4 py-5 space-y-6 custom-scrollbar">
         {navGroups.map((group, groupIdx) => (
           <div key={groupIdx} className="space-y-1">
@@ -193,13 +211,13 @@ const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
                   key={item.path}
                   to={item.path}
                   title={collapsed ? `${group.category}: ${item.label}` : undefined}
-                  className={`relative flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-sm transition-all duration-200 ${
+                  className={`relative flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-sm transition-all duration-200 font-medium ${
                     isActive
-                      ? "text-slate-900 dark:text-white font-extrabold bg-slate-100/60 dark:bg-slate-800/50"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium hover:bg-slate-50 dark:hover:bg-slate-800/40"
+                      ? "text-primary bg-primary/10 dark:bg-primary/20"
+                      : "text-slate-500 dark:text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-slate-800/40"
                   } ${collapsed ? "justify-center px-0" : ""}`}
                 >
-                  {/* Vertical Accent Indicator Bar on Left Edge (Donezo Reference Style) */}
+                  {/* Vertical Accent Indicator Bar on Left Edge */}
                   {isActive && (
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 rounded-r-full bg-primary shadow-sm shadow-primary/50" />
                   )}
@@ -226,8 +244,6 @@ const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
           </div>
         ))}
       </div>
-
-
 
       {/* Profile Footer */}
       <div className="p-3 border-t border-slate-100 dark:border-slate-800">

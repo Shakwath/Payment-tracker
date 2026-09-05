@@ -2,7 +2,7 @@ import { Users, GraduationCap, Phone, Mail, UserCheck } from "lucide-react";
 import { INITIAL_STUDENTS } from "../../../data/mockData";
 
 const MyStudentsPage = () => {
-  // Guardian's children (e.g. Arif Rahman & Nusrat Jahan)
+  // Enrolled student info
   const myChildren = INITIAL_STUDENTS.slice(0, 2);
 
   return (
@@ -10,11 +10,11 @@ const MyStudentsPage = () => {
       <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm">
         <div className="flex items-center gap-2 text-primary font-mono text-xs font-bold uppercase mb-1">
           <Users className="h-4 w-4" />
-          <span>Guardian Portal</span>
+          <span>Student Portal</span>
         </div>
-        <h1 className="text-2xl font-black text-base-content tracking-tight">My Registered Children</h1>
+        <h1 className="text-2xl font-black text-base-content tracking-tight">Student Academic Overview</h1>
         <p className="text-xs text-base-content/60 mt-0.5">
-          Overview of your children enrolled in school, class info, and tuition fee clearance status.
+          Overview of enrolled student accounts, class info, and tuition fee clearance status.
         </p>
       </div>
 
@@ -38,20 +38,20 @@ const MyStudentsPage = () => {
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-base-content/60">Monthly Fee Rate:</span>
-                <span className="font-bold font-mono text-base-content">৳ {stu.monthlyFee}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-base-content/60 font-mono">Guardian:</span>
+                <span className="font-bold text-base-content">{stu.guardianName} ({stu.guardianRelation})</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-base-content/60">Payment Status:</span>
-                <span className={`font-mono font-bold ${stu.dues > 0 ? "text-amber-500" : "text-emerald-500"}`}>
-                  {stu.paymentStatus}
-                </span>
+              <div className="flex justify-between items-center">
+                <span className="text-base-content/60 font-mono">Contact:</span>
+                <span className="font-mono text-base-content">{stu.guardianPhone}</span>
               </div>
-              <div className="flex justify-between pt-2 border-t border-slate-200 dark:border-slate-800">
-                <span className="text-base-content/60">Outstanding Dues:</span>
-                <span className={`font-bold font-mono ${stu.dues > 0 ? "text-rose-500" : "text-emerald-500"}`}>
-                  ৳ {stu.dues}
+              <div className="flex justify-between items-center">
+                <span className="text-base-content/60 font-mono">Fee Clearance:</span>
+                <span className={`font-mono font-bold px-2 py-0.5 rounded-full text-[10px] ${
+                  stu.tuitionStatus === "Paid" ? "bg-emerald-500/15 text-emerald-500" : "bg-amber-500/15 text-amber-500"
+                }`}>
+                  {stu.tuitionStatus}
                 </span>
               </div>
             </div>

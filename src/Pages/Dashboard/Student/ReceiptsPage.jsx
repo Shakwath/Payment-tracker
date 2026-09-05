@@ -34,7 +34,7 @@ const ReceiptsPage = () => {
       <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm">
         <div className="flex items-center gap-2 text-[#9603F8] font-mono text-xs font-bold uppercase mb-1">
           <FileText className="h-4 w-4" />
-          <span>Guardian Portal</span>
+          <span>Student Portal</span>
         </div>
         <h1 className="text-2xl font-black text-base-content tracking-tight">
           Verified Fee Receipts
@@ -78,7 +78,13 @@ const ReceiptsPage = () => {
               <p className="text-xs text-base-content/60">{p.feeType}</p>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-base-content/50">{p.date}</span>
-                <span className="font-mono text-emerald-500 dark:text-emerald-400 font-extrabold text-base">
+                <span className={`font-mono font-extrabold text-base ${
+                  p.status === "Successful" || p.status === "Paid" || p.status === "Verified"
+                    ? "text-emerald-500 dark:text-emerald-400"
+                    : p.status === "Pending"
+                    ? "text-amber-500 dark:text-amber-400"
+                    : "text-rose-500 dark:text-rose-400 line-through opacity-80"
+                }`}>
                   ৳ {Number(p.amount).toLocaleString("en-BD")}
                 </span>
               </div>

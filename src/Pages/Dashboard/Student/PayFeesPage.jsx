@@ -59,42 +59,43 @@ const PayFeesPage = () => {
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-base-content focus:ring-2 focus:ring-primary/40 focus:outline-none font-medium"
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-base-content focus:ring-2 focus:ring-primary/40 focus:outline-none"
               >
                 <option value="bKash">bKash Merchant</option>
                 <option value="Nagad">Nagad Direct</option>
-                <option value="Bank">Bank Wire Transfer</option>
+                <option value="Bank Wire">Bank Wire Deposit</option>
               </select>
             </div>
             <div>
-              <label className="block text-[10px] font-mono uppercase text-base-content/60 mb-1">Amount to Pay (৳)</label>
+              <label className="block text-[10px] font-mono uppercase text-base-content/60 mb-1">Amount (BDT)</label>
               <input
                 type="number"
-                required
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-base-content font-mono focus:ring-2 focus:ring-primary/40 focus:outline-none"
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-base-content focus:ring-2 focus:ring-primary/40 focus:outline-none font-mono"
+                required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[10px] font-mono uppercase text-base-content/60 mb-1">Transaction Ref ID / bKash TRX ID</label>
+            <label className="block text-[10px] font-mono uppercase text-base-content/60 mb-1">Transaction Ref / TRX ID</label>
             <input
               type="text"
-              required
-              placeholder="e.g. BK-9912048"
+              placeholder="e.g. BK-9912048 or Bank Ref No."
               value={trxId}
               onChange={(e) => setTrxId(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-base-content font-mono focus:ring-2 focus:ring-primary/40 focus:outline-none"
+              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-base-content focus:ring-2 focus:ring-primary/40 focus:outline-none font-mono"
+              required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 rounded-2xl bg-primary text-white font-bold hover:bg-primary/90 transition shadow-md shadow-primary/20 flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-2xl bg-primary text-white font-bold text-xs shadow-md shadow-primary/20 hover:bg-primary/90 transition flex items-center justify-center gap-2 mt-2"
           >
-            <Send className="h-4 w-4" /> Submit Payment Proof
+            <Send className="h-4 w-4" />
+            <span>Submit Payment Verification</span>
           </button>
         </form>
       )}

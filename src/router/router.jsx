@@ -20,12 +20,12 @@ import AuditLogsPage from "../Pages/Dashboard/Admin/AuditLogsPage";
 import NotificationsPage from "../Pages/Dashboard/Admin/NotificationsPage";
 import SettingsPage from "../Pages/Dashboard/Admin/SettingsPage";
 
-// Guardian Role Pages
-import MyStudentsPage from "../Pages/Dashboard/Guardian/MyStudentsPage";
-import PayFeesPage from "../Pages/Dashboard/Guardian/PayFeesPage";
-import GuardianPaymentHistoryPage from "../Pages/Dashboard/Guardian/GuardianPaymentHistoryPage";
-import ReceiptsPage from "../Pages/Dashboard/Guardian/ReceiptsPage";
-import GuardianProfilePage from "../Pages/Dashboard/Guardian/GuardianProfilePage";
+// Student Role Pages
+import MyStudentsPage from "../Pages/Dashboard/Student/MyStudentsPage";
+import PayFeesPage from "../Pages/Dashboard/Student/PayFeesPage";
+import StudentPaymentHistoryPage from "../Pages/Dashboard/Student/StudentPaymentHistoryPage";
+import ReceiptsPage from "../Pages/Dashboard/Student/ReceiptsPage";
+import StudentProfilePage from "../Pages/Dashboard/Student/StudentProfilePage";
 
 // Teacher Role Pages
 import TeacherProfilePage from "../Pages/Dashboard/Teacher/TeacherProfilePage";
@@ -159,7 +159,7 @@ const router = createBrowserRouter([
         path: "settings",
         element: <SettingsPage />,
       },
-      // Guardian Routes
+      // Student Routes
       {
         path: "my-students",
         element: <MyStudentsPage />,
@@ -170,7 +170,7 @@ const router = createBrowserRouter([
       },
       {
         path: "payment-history",
-        element: <GuardianPaymentHistoryPage />,
+        element: <StudentPaymentHistoryPage />,
       },
       {
         path: "receipts",
@@ -178,7 +178,7 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <GuardianProfilePage />,
+        element: <StudentProfilePage />,
       },
       // Teacher Routes
       {

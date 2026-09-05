@@ -1,25 +1,25 @@
-import { User, Phone, Mail, MapPin, Briefcase } from "lucide-react";
+import { User, Phone, Mail, MapPin, GraduationCap } from "lucide-react";
 import useAuth from "../../../Hooks/useAuth";
 
-const GuardianProfilePage = () => {
+const StudentProfilePage = () => {
   const { user } = useAuth();
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm text-center">
         <img
-          src={user?.photoURL || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"}
-          alt="Guardian"
+          src={user?.photoURL || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&q=80"}
+          alt="Student"
           className="h-20 w-20 rounded-3xl object-cover mx-auto ring-4 ring-primary/20 mb-3"
         />
-        <h1 className="text-2xl font-black text-base-content tracking-tight">{user?.displayName || "Rafiqul Islam Rahman"}</h1>
+        <h1 className="text-2xl font-black text-base-content tracking-tight">{user?.displayName || "Arif Rahman"}</h1>
         <span className="text-xs font-mono font-bold text-primary px-3 py-1 rounded-full bg-primary/10 inline-block mt-1">
-          Registered Parent / Guardian
+          Enrolled Student (Grade 10)
         </span>
       </div>
 
       <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4 text-xs">
-        <h3 className="font-extrabold text-base-content text-sm">Personal Information</h3>
+        <h3 className="font-extrabold text-base-content text-sm">Student Profile Information</h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-[10px] uppercase font-mono text-base-content/50">Phone</p>
@@ -27,11 +27,11 @@ const GuardianProfilePage = () => {
           </div>
           <div>
             <p className="text-[10px] uppercase font-mono text-base-content/50">Email</p>
-            <p className="font-bold text-base-content flex items-center gap-1 mt-0.5"><Mail className="h-3 w-3 text-primary" /> {user?.email || "rafiq.rahman@gmail.com"}</p>
+            <p className="font-bold text-base-content flex items-center gap-1 mt-0.5"><Mail className="h-3 w-3 text-primary" /> {user?.email || "arif.rahman@gmail.com"}</p>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-mono text-base-content/50">Occupation</p>
-            <p className="font-bold text-base-content flex items-center gap-1 mt-0.5"><Briefcase className="h-3 w-3 text-primary" /> Senior Software Engineer</p>
+            <p className="text-[10px] uppercase font-mono text-base-content/50">Class & Roll</p>
+            <p className="font-bold text-base-content flex items-center gap-1 mt-0.5"><GraduationCap className="h-3 w-3 text-primary" /> Grade 10 (Roll #101)</p>
           </div>
           <div>
             <p className="text-[10px] uppercase font-mono text-base-content/50">Residential Address</p>
@@ -43,4 +43,4 @@ const GuardianProfilePage = () => {
   );
 };
 
-export default GuardianProfilePage;
+export default StudentProfilePage;

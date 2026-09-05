@@ -1,18 +1,18 @@
-import { Clock, CheckCircle2 } from "lucide-react";
+import { Clock, CheckCircle2, ShieldAlert } from "lucide-react";
 import { INITIAL_PAYMENTS } from "../../../data/mockData";
 import { ReceiptActions } from "../../../Components/Receipt/DownloadReceiptButton";
 
-const GuardianPaymentHistoryPage = () => {
+const StudentPaymentHistoryPage = () => {
   return (
     <div className="space-y-6">
       <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm">
         <div className="flex items-center gap-2 text-primary font-mono text-xs font-bold uppercase mb-1">
           <Clock className="h-4 w-4" />
-          <span>Guardian Portal</span>
+          <span>Student Portal</span>
         </div>
         <h1 className="text-2xl font-black text-base-content tracking-tight">Payment History & Ledger</h1>
         <p className="text-xs text-base-content/60 mt-0.5">
-          History of all tuition payments and fee clearings submitted for your children.
+          History of all tuition payments and fee clearings submitted for your account.
         </p>
       </div>
 
@@ -24,7 +24,6 @@ const GuardianPaymentHistoryPage = () => {
               <th className="py-4 px-6">Student</th>
               <th className="py-4 px-6">Fee Type</th>
               <th className="py-4 px-6">Method</th>
-              <th className="py-4 px-6">Date</th>
               <th className="py-4 px-6">Amount</th>
               <th className="py-4 px-6 text-right">Status</th>
               <th className="py-4 px-6 text-right">Receipt</th>
@@ -37,11 +36,29 @@ const GuardianPaymentHistoryPage = () => {
                 <td className="py-4 px-6 font-bold text-base-content">{p.studentName}</td>
                 <td className="py-4 px-6 text-base-content/70">{p.feeType}</td>
                 <td className="py-4 px-6 font-mono">{p.method}</td>
-                <td className="py-4 px-6 text-base-content/60">{p.date}</td>
-                <td className="py-4 px-6 font-mono font-black text-emerald-500">৳ {p.amount}</td>
+                <td className="py-4 px-6 font-mono font-black">
+                  <span className={
+                    p.status === "Successful"
+                      ? "text-emerald-500"
+                      : p.status === "Pending"
+                      ? "text-amber-500"
+                      : "text-rose-500 line-through opacity-80"
+                  }>
+                    ৳ {p.amount.toLocaleString()}
+                  </span>
+                </td>
                 <td className="py-4 px-6 text-right">
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 font-mono font-bold text-[10px]">
-                    <CheckCircle2 className="h-3 w-3" /> {p.status}
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono font-bold text-[10px] ${
+                    p.status === "Successful"
+                      ? "bg-emerald-500/15 text-emerald-500"
+                      : p.status === "Pending"
+                      ? "bg-amber-500/15 text-amber-500"
+                      : "bg-rose-500/15 text-rose-500"
+                  }`}>
+                    {p.status === "Pending" && <Clock className="h-3 w-3" />}
+                    {p.status === "Successful" && <CheckCircle2 className="h-3 w-3" />}
+                    {p.status === "Rejected" && <ShieldAlert className="h-3 w-3" />}
+                    {p.status}
                   </span>
                 </td>
                 <td className="py-4 px-6">
@@ -58,4 +75,4 @@ const GuardianPaymentHistoryPage = () => {
   );
 };
 
-export default GuardianPaymentHistoryPage;
+export default StudentPaymentHistoryPage;

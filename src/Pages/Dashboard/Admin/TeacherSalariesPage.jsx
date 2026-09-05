@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { DollarSign, CheckCircle2, Clock, Send, FileText, X } from "lucide-react";
 import { INITIAL_TEACHER_SALARIES } from "../../../data/mockData";
+import toast from "react-hot-toast";
 
 const TeacherSalariesPage = () => {
   const [salaries, setSalaries] = useState(INITIAL_TEACHER_SALARIES);
@@ -14,7 +15,7 @@ const TeacherSalariesPage = () => {
           : s
       )
     );
-    alert(`Salary disbursement successfully processed!`);
+    toast.success("Salary disbursement successfully processed!");
   };
 
   const totalPayroll = salaries.reduce((acc, curr) => acc + curr.netPayable, 0);
@@ -152,7 +153,7 @@ const TeacherSalariesPage = () => {
               </div>
             </div>
             <button
-              onClick={() => alert("Simulated Payslip Download!")}
+              onClick={() => toast("PDF payslip download coming soon!", { icon: "📄" })}
               className="w-full py-2.5 rounded-xl bg-primary text-white text-xs font-bold"
             >
               Download PDF Payslip
