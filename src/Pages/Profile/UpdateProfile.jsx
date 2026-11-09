@@ -8,7 +8,7 @@ import useAuth from "../../Hooks/useAuth";
 import { useTheme } from "../../Context/ThemeProvider";
 
 const UpdateProfile = () => {
-  const { user, setUser, updateUserProfile } = useAuth();
+  const { user, setUser, updateUserProfile, activeRoleProfile } = useAuth();
   const { theme } = useTheme();
   const dark = theme === "dark";
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const UpdateProfile = () => {
     formState: { errors },
   } = useForm();
 
-  // Populate default values from the logged-in user
   useEffect(() => {
     if (user) {
       setValue("name", user.displayName || "");
@@ -34,17 +33,14 @@ const UpdateProfile = () => {
     setUpdating(true);
     try {
       await updateUserProfile(name, photo);
-      
-      // Update local state context
       setUser({
         ...user,
         displayName: name,
         photoURL: photo,
       });
-
-      toast.success("Profile updated successfully!");
+      toast.success("প্রোফাইল সফলভাবে আপডেট হয়েছে!");
     } catch (error) {
-      toast.error(error.message || "Failed to update profile");
+      toast.error(error.message || "প্রোফাইল আপডেট করতে সমস্যা হয়েছে");
     } finally {
       setUpdating(false);
     }
@@ -64,17 +60,16 @@ const UpdateProfile = () => {
       }`}
     >
       <div className="w-full max-w-5xl mx-auto">
-        {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className={`flex items-center gap-2 mb-6 px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-[1.02] border ${
+          className={`flex items-center gap-2 mb-6 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:scale-[1.02] border cursor-pointer ${
             dark
               ? "border-slate-800 text-slate-300 bg-slate-900/60 hover:bg-slate-900"
               : "border-slate-200 text-slate-700 bg-white hover:bg-slate-50"
           }`}
         >
           <ArrowLeft size={16} />
-          <span>Back</span>
+          <span>ফিরে যান</span>
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
@@ -92,7 +87,6 @@ const UpdateProfile = () => {
                   : "border-slate-200 bg-white/90 text-slate-800"
               }`}
             >
-              {/* Profile Image with Dynamic Hover Effect */}
               <div className="relative group mb-6">
                 <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-primary to-secondary opacity-70 blur-md group-hover:opacity-100 transition duration-300 animate-pulse" />
                 <div className="relative w-36 h-36 rounded-full overflow-hidden border-4 border-base-100 shadow-2xl transition duration-300 group-hover:scale-105">
@@ -107,9 +101,8 @@ const UpdateProfile = () => {
                 </div>
               </div>
 
-              {/* User Info */}
               <h2 className="text-2xl font-extrabold tracking-tight truncate max-w-full">
-                {user?.displayName || "User Name"}
+                {user?.displayName || activeRoleProfile?.name}
               </h2>
               <p
                 className={`text-xs font-mono mt-1 mb-4 ${
@@ -119,12 +112,9 @@ const UpdateProfile = () => {
                 {user?.email}
               </p>
 
-              {/* Status Badge */}
-              <div
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-primary/15 text-primary border border-primary/25"
-              >
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-primary/15 text-primary border border-primary/25">
                 <Shield size={14} />
-                <span>Verified Account</span>
+                <span>{activeRoleProfile?.badgeLabel || "যাচাইকৃত অ্যাকাউন্ট"}</span>
               </div>
 
               <div
@@ -136,11 +126,11 @@ const UpdateProfile = () => {
               <div className="text-left w-full space-y-3.5">
                 <div>
                   <span
-                    className={`block text-[11px] font-mono font-bold uppercase tracking-wider ${
-                      dark ? "text-slate-500" : "text-slate-400"
+                    className={`block text-[11px] font-bold ${
+                      dark ? "text-slate-400" : "text-slate-500"
                     }`}
                   >
-                    User UID
+                    ব্যবহারকারী আইডি (UID)
                   </span>
                   <span className="font-mono text-xs font-semibold block truncate select-all bg-base-200 dark:bg-slate-950 p-3 rounded-xl border border-base-300 dark:border-slate-800 mt-1">
                     {user?.uid}
@@ -166,30 +156,29 @@ const UpdateProfile = () => {
             >
               <div className="mb-6">
                 <h1
-                  className={`text-3xl font-extrabold tracking-tight ${
+                  className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${
                     dark ? "text-white" : "text-slate-900"
                   }`}
                 >
-                  Edit Profile
+                  প্রোফাইল সম্পাদনা করুন
                 </h1>
                 <p
                   className={`text-sm mt-1 ${
                     dark ? "text-slate-400" : "text-slate-500"
                   }`}
                 >
-                  Update your account credentials and personalization preferences.
+                  আপনার নাম ও প্রোফাইল ছবির লিংক পরিবর্তন করুন।
                 </p>
               </div>
 
               <form onSubmit={handleSubmit(handleUpdate)} className="space-y-5">
-                {/* Full Name */}
                 <div>
                   <label
-                    className={`mb-1 block text-xs font-mono font-bold uppercase tracking-wider ${
+                    className={`mb-1 block text-xs font-bold ${
                       dark ? "text-slate-300" : "text-slate-700"
                     }`}
                   >
-                    Full Name
+                    পূর্ণ নাম
                   </label>
                   <div
                     className={`flex items-center rounded-2xl border px-4 transition ${
@@ -207,13 +196,13 @@ const UpdateProfile = () => {
                     />
                     <input
                       type="text"
-                      placeholder="Enter your name"
+                      placeholder="আপনার পূর্ণ নাম লিখুন"
                       className={inputClass(errors.name)}
                       {...register("name", {
-                        required: "Name is required",
+                        required: "নাম আবশ্যক",
                         minLength: {
                           value: 3,
-                          message: "Name must be at least 3 characters",
+                          message: "নাম কমপক্ষে ৩ অক্ষরের হতে হবে",
                         },
                       })}
                     />
@@ -225,14 +214,13 @@ const UpdateProfile = () => {
                   )}
                 </div>
 
-                {/* Photo URL */}
                 <div>
                   <label
-                    className={`mb-1 block text-xs font-mono font-bold uppercase tracking-wider ${
+                    className={`mb-1 block text-xs font-bold ${
                       dark ? "text-slate-300" : "text-slate-700"
                     }`}
                   >
-                    Photo URL
+                    প্রোফাইল ছবির লিংক (Photo URL)
                   </label>
                   <div
                     className={`flex items-center rounded-2xl border px-4 transition ${
@@ -253,11 +241,7 @@ const UpdateProfile = () => {
                       placeholder="https://image.com/photo.jpg"
                       className={inputClass(errors.photo)}
                       {...register("photo", {
-                        required: "Photo URL is required",
-                        pattern: {
-                          value: /^https?:\/\/.+/,
-                          message: "Please enter a valid URL starting with http/https",
-                        },
+                        required: "ছবির লিংক আবশ্যক",
                       })}
                     />
                   </div>
@@ -268,20 +252,17 @@ const UpdateProfile = () => {
                   )}
                 </div>
 
-                {/* Email (Disabled) */}
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <label
-                      className={`block text-xs font-mono font-bold uppercase tracking-wider ${
+                      className={`block text-xs font-bold ${
                         dark ? "text-slate-300" : "text-slate-700"
                       }`}
                     >
-                      Email Address
+                      ইমেইল ঠিকানা
                     </label>
-                    <span
-                      className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border border-slate-700 bg-slate-800/50 text-slate-400"
-                    >
-                      Read Only
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-700 bg-slate-800/50 text-slate-400">
+                      পরিবর্তনযোগ্য নয়
                     </span>
                   </div>
                   <div
@@ -301,14 +282,13 @@ const UpdateProfile = () => {
                   </div>
                 </div>
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={updating}
-                  className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-secondary px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/25 transition duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 mt-6"
+                  className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-secondary px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/25 transition duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 mt-6 cursor-pointer"
                 >
                   <Save size={16} />
-                  <span>{updating ? "Saving Changes..." : "Save Changes"}</span>
+                  <span>{updating ? "সংরক্ষণ করা হচ্ছে..." : "পরিবর্তন সংরক্ষণ করুন"}</span>
                 </button>
               </form>
             </div>
