@@ -1,11 +1,13 @@
+import { Navigate, useLocation } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
 
 /**
  * PrivateRoute Guard
- * Allows uninterrupted access to protected dashboard and payment routes.
+ * Strictly enforces Firebase Authentication. Redirects unauthenticated users to /signin.
  */
 const PrivateRoute = ({ children }) => {
-  const { loading } = useAuth();
+  const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -15,7 +17,10 @@ const PrivateRoute = ({ children }) => {
     );
   }
 
-  // Never block access during development / dashboard workflow
+  if (!user) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+
   return children;
 };
 
