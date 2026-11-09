@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -22,173 +22,357 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
+  KeyRound,
 } from "lucide-react";
 import useAuth from "../../Hooks/useAuth";
+import { useLanguage } from "../../Context/LanguageContext";
 
-/**
- * Role-Based Categorized Navigation Configuration
- */
-const ROLE_NAV_GROUPS = {
+export const ROLE_NAV_GROUPS = {
   admin: [
     {
-      category: "Overview",
-      items: [{ label: "Dashboard", path: "/dashboard", icon: LayoutDashboard }],
-    },
-    {
-      category: "People Management",
+      categoryBn: "সারসংক্ষেপ",
+      categoryEn: "Overview",
       items: [
-        { label: "Students", path: "/dashboard/students", icon: Users },
-        { label: "Guardians", path: "/dashboard/guardians", icon: UserCheck },
-        { label: "Teachers", path: "/dashboard/teachers", icon: GraduationCap },
+        {
+          labelBn: "ড্যাশবোর্ড",
+          labelEn: "Dashboard",
+          path: "/dashboard",
+          icon: LayoutDashboard,
+        },
       ],
     },
     {
-      category: "Academic Management",
-      items: [{ label: "Semesters", path: "/dashboard/semesters", icon: CalendarDays }],
-    },
-    {
-      category: "Finance",
+      categoryBn: "শিক্ষার্থী, জনবল ও রোল",
+      categoryEn: "Users & Role Control",
       items: [
-        { label: "Fee Management", path: "/dashboard/fee-management", icon: Receipt },
-        { label: "Payments", path: "/dashboard/payments", icon: CreditCard },
-        { label: "Pending Verification", path: "/dashboard/pending-verification", icon: Clock },
-        { label: "Expenses", path: "/dashboard/expenses", icon: TrendingDown },
-        { label: "Teacher Salaries", path: "/dashboard/teacher-salaries", icon: DollarSign },
+        {
+          labelBn: "ইমেইল ও রোল নির্ধারণ",
+          labelEn: "Email Role Control",
+          path: "/dashboard/user-roles",
+          icon: KeyRound,
+        },
+        {
+          labelBn: "শিক্ষার্থী ব্যবস্থাপনা",
+          labelEn: "Students Management",
+          path: "/dashboard/students",
+          icon: Users,
+        },
+        {
+          labelBn: "অভিভাবক তালিকা",
+          labelEn: "Guardians Directory",
+          path: "/dashboard/guardians",
+          icon: UserCheck,
+        },
+        {
+          labelBn: "শিক্ষক মণ্ডলী",
+          labelEn: "Teachers Directory",
+          path: "/dashboard/teachers",
+          icon: GraduationCap,
+        },
       ],
     },
     {
-      category: "Reports & Monitoring",
+      categoryBn: "শিক্ষাবর্ষ ও একাডেমিক",
+      categoryEn: "Academic & Semesters",
       items: [
-        { label: "Reports", path: "/dashboard/reports", icon: BarChart3 },
-        { label: "Audit Logs", path: "/dashboard/audit-logs", icon: ShieldCheck },
+        {
+          labelBn: "সেমিস্টার ও ফলাফল",
+          labelEn: "Semesters & Results",
+          path: "/dashboard/semesters",
+          icon: CalendarDays,
+        },
       ],
     },
     {
-      category: "Communication",
-      items: [{ label: "Notifications", path: "/dashboard/notifications", icon: Bell }],
+      categoryBn: "হিসাব ও অর্থ বিভাগ",
+      categoryEn: "Finance & Accounts",
+      items: [
+        {
+          labelBn: "ফি নির্ধারণ (Fee Setup)",
+          labelEn: "Fee Configuration",
+          path: "/dashboard/fee-management",
+          icon: Receipt,
+        },
+        {
+          labelBn: "সকল পেমেন্ট ও ম্যানুয়াল আপডেট",
+          labelEn: "Payments & Manual Edit",
+          path: "/dashboard/payments",
+          icon: CreditCard,
+        },
+        {
+          labelBn: "পেন্ডিং যাচাই (Verification)",
+          labelEn: "Pending Verification",
+          path: "/dashboard/pending-verification",
+          icon: Clock,
+        },
+        {
+          labelBn: "মাসিক ব্যয় ও ভাউচার",
+          labelEn: "Expenses & Vouchers",
+          path: "/dashboard/expenses",
+          icon: TrendingDown,
+        },
+        {
+          labelBn: "শিক্ষক বেতন (Payroll)",
+          labelEn: "Teacher Salaries",
+          path: "/dashboard/teacher-salaries",
+          icon: DollarSign,
+        },
+      ],
     },
     {
-      category: "System",
-      items: [{ label: "Settings", path: "/dashboard/settings", icon: Settings }],
+      categoryBn: "প্রতিবেদন ও মনিটরিং",
+      categoryEn: "Reports & Audit",
+      items: [
+        {
+          labelBn: "রিপোর্ট ও PDF এক্সপোর্ট",
+          labelEn: "Reports & PDF Export",
+          path: "/dashboard/reports",
+          icon: BarChart3,
+        },
+        {
+          labelBn: "অডিট লগ (Audit Logs)",
+          labelEn: "Audit Logs",
+          path: "/dashboard/audit-logs",
+          icon: ShieldCheck,
+        },
+      ],
+    },
+    {
+      categoryBn: "যোগাযোগ ও সিস্টেম",
+      categoryEn: "System & Notices",
+      items: [
+        {
+          labelBn: "নোটিশ ও নোটিফিকেশন",
+          labelEn: "Notifications",
+          path: "/dashboard/notifications",
+          icon: Bell,
+        },
+        {
+          labelBn: "মাদ্রাসা সেটিংস",
+          labelEn: "System Settings",
+          path: "/dashboard/settings",
+          icon: Settings,
+        },
+      ],
     },
   ],
 
   guardian: [
     {
-      category: "Overview",
-      items: [{ label: "Dashboard", path: "/dashboard", icon: LayoutDashboard }],
-    },
-    {
-      category: "Family & Dues",
+      categoryBn: "সারসংক্ষেপ",
+      categoryEn: "Overview",
       items: [
-        { label: "My Students", path: "/dashboard/my-students", icon: Users },
-        { label: "Pay Fees", path: "/dashboard/pay-fees", icon: CreditCard },
-        { label: "Payment History", path: "/dashboard/payment-history", icon: Clock },
-        { label: "Receipts", path: "/dashboard/receipts", icon: FileText },
+        {
+          labelBn: "অভিভাবক ড্যাশবোর্ড",
+          labelEn: "Guardian Dashboard",
+          path: "/dashboard",
+          icon: LayoutDashboard,
+        },
       ],
     },
     {
-      category: "System",
+      categoryBn: "সন্তান ও মাসিক ফি",
+      categoryEn: "Children & Monthly Fees",
       items: [
-        { label: "Notifications", path: "/dashboard/notifications", icon: Bell },
-        { label: "Profile", path: "/dashboard/profile", icon: User },
+        {
+          labelBn: "আমার সন্তান ও ফলাফল",
+          labelEn: "My Students & Results",
+          path: "/dashboard/my-students",
+          icon: Users,
+        },
+        {
+          labelBn: "মাসিক ফি পরিশোধ করুন",
+          labelEn: "Pay Monthly Fee",
+          path: "/dashboard/pay-fees",
+          icon: CreditCard,
+        },
+        {
+          labelBn: "পেমেন্ট হিস্ট্রি ও স্ট্যাটাস",
+          labelEn: "Payment History",
+          path: "/dashboard/payment-history",
+          icon: Clock,
+        },
+        {
+          labelBn: "ডাউনলোড রশিদ (Receipts)",
+          labelEn: "Official Receipts",
+          path: "/dashboard/receipts",
+          icon: FileText,
+        },
+      ],
+    },
+    {
+      categoryBn: "সিস্টেম",
+      categoryEn: "Account",
+      items: [
+        {
+          labelBn: "নোটিশ ও বার্তা",
+          labelEn: "Announcements",
+          path: "/dashboard/notifications",
+          icon: Bell,
+        },
+        {
+          labelBn: "প্রোফাইল",
+          labelEn: "My Profile",
+          path: "/dashboard/profile",
+          icon: User,
+        },
       ],
     },
   ],
 
   teacher: [
     {
-      category: "Overview",
-      items: [{ label: "Dashboard", path: "/dashboard", icon: LayoutDashboard }],
-    },
-    {
-      category: "Academic & Payroll",
+      categoryBn: "সারসংক্ষেপ",
+      categoryEn: "Overview",
       items: [
-        { label: "My Profile", path: "/dashboard/my-profile", icon: User },
-        { label: "My Subjects", path: "/dashboard/my-subjects", icon: BookOpen },
-        { label: "Salary History", path: "/dashboard/salary-history", icon: DollarSign },
-        { label: "Input Student Result", path: "/dashboard/input-student-result", icon: FileSpreadsheet },
+        {
+          labelBn: "শিক্ষক ড্যাশবোর্ড",
+          labelEn: "Teacher Dashboard",
+          path: "/dashboard",
+          icon: LayoutDashboard,
+        },
       ],
     },
     {
-      category: "System",
-      items: [{ label: "Notifications", path: "/dashboard/notifications", icon: Bell }],
+      categoryBn: "একাডেমিক ও বেতন",
+      categoryEn: "Academic & Payroll",
+      items: [
+        {
+          labelBn: "আমার প্রোফাইল",
+          labelEn: "My Profile",
+          path: "/dashboard/my-profile",
+          icon: User,
+        },
+        {
+          labelBn: "নির্ধারিত বিষয় ও জামাত",
+          labelEn: "Assigned Subjects",
+          path: "/dashboard/my-subjects",
+          icon: BookOpen,
+        },
+        {
+          labelBn: "মাসিক বেতন বিবরণী",
+          labelEn: "Salary History",
+          path: "/dashboard/salary-history",
+          icon: DollarSign,
+        },
+        {
+          labelBn: "ফলাফল ও অগ্রগতি ইনপুট",
+          labelEn: "Input Student Result",
+          path: "/dashboard/input-student-result",
+          icon: FileSpreadsheet,
+        },
+      ],
+    },
+    {
+      categoryBn: "সিস্টেম",
+      categoryEn: "System",
+      items: [
+        {
+          labelBn: "নোটিশ বোর্ড",
+          labelEn: "Notice Board",
+          path: "/dashboard/notifications",
+          icon: Bell,
+        },
+        {
+          labelBn: "প্রোফাইল আপডেট",
+          labelEn: "Update Profile",
+          path: "/dashboard/profile",
+          icon: Settings,
+        },
+      ],
     },
   ],
 };
 
-const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
-  const { user, logOut } = useAuth();
+const Sidebar = ({ currentRole = "guardian" }) => {
+  const { user, logOut, assignEmailRole } = useAuth();
+  const { t } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
 
-  const roleKey = (currentRole || "admin").toLowerCase();
-  const navGroups = ROLE_NAV_GROUPS[roleKey] || ROLE_NAV_GROUPS.admin;
+  const roleKey = (currentRole || "guardian").toLowerCase();
+  const navGroups = ROLE_NAV_GROUPS[roleKey] || ROLE_NAV_GROUPS.guardian;
 
-  const roleLabels = {
-    admin: "Admin Console",
-    guardian: "Guardian Portal",
-    teacher: "Teacher Hub",
+  const ROLE_LABELS = {
+    admin: t("মুহতামিম / অ্যাডমিন প্যানেল", "Muhtamim / Admin Panel"),
+    guardian: t("অভিভাবক পোর্টাল", "Guardian Portal"),
+    teacher: t("উস্তাদ / শিক্ষক পোর্টাল", "Teacher Portal"),
+  };
+
+  const handleLogout = async () => {
+    await logOut();
+    navigate("/signin");
   };
 
   return (
     <aside
-      className={`relative flex flex-col h-screen border-r border-slate-200/80 dark:border-purple-900/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl transition-all duration-300 z-30 select-none ${
+      className={`relative flex flex-col h-screen border-r border-slate-200/80 dark:border-purple-900/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl transition-all duration-300 z-30 select-none print:hidden ${
         collapsed ? "w-20" : "w-64 sm:w-72"
       }`}
     >
-      {/* Sidebar Header & Brand */}
-      <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-200/80 dark:border-slate-800">
-        <Link to="/" className="flex items-center gap-3 overflow-hidden">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-secondary text-white shadow-md shadow-primary/25">
-            <Sparkles className="h-5 w-5" />
-          </div>
+      {/* Sidebar Header with Official Logo & Name */}
+      <div className="flex items-center justify-between p-4 border-b border-slate-200/80 dark:border-slate-800">
+        <Link to="/" className="flex items-center gap-2.5 overflow-hidden">
+          <img
+            src="/logo.png"
+            alt="মারকাযুল ইলমি ওয়াল হুদা"
+            className="h-10 w-10 shrink-0 rounded-xl object-contain bg-white p-0.5 border border-primary/25 shadow-sm"
+          />
           {!collapsed && (
             <div className="flex flex-col min-w-0">
-              <span className="font-extrabold text-base tracking-tight text-base-content leading-none">
-                Payment<span className="text-primary font-black">Track</span>
+              <span className="font-extrabold text-xs sm:text-sm tracking-tight text-base-content truncate">
+                {t("মারকাযুল ইলমি ওয়াল হুদা", "Markajul Ilm Wal Huda")}
               </span>
-              <span className="text-[10px] font-mono font-bold text-primary tracking-wide uppercase mt-1">
-                {roleLabels[roleKey] || "Portal"}
+              <span className="text-[10px] font-bold text-primary tracking-wide mt-0.5">
+                {ROLE_LABELS[roleKey]}
               </span>
             </div>
           )}
         </Link>
 
-        {/* Collapse Toggle Button */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden sm:flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 bg-base-100 hover:bg-base-200 text-base-content/70 hover:text-primary transition"
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="hidden sm:flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 bg-base-100 hover:bg-base-200 text-base-content/70 hover:text-primary transition cursor-pointer"
+          title={collapsed ? t("বড় করুন", "Expand") : t("ছোট করুন", "Collapse")}
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </button>
       </div>
 
-      {/* Role Switcher Pill Bar */}
-      {!collapsed && (
-        <div className="px-4 py-3 bg-base-200/60 dark:bg-slate-950/60 border-b border-slate-200/70 dark:border-slate-800">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-base-content/50">
-              Select User Role:
+      {/* Verified Firebase Email & Role Status Box */}
+      {!collapsed && user?.email && (
+        <div className="px-4 py-3 bg-base-200/60 dark:bg-slate-950/60 border-b border-slate-200/70 dark:border-slate-800 space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-base-content/60">
+              {t("ফায়ারবেস ইমেইল ও রোল:", "Firebase Email & Role:")}
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-primary/15 text-primary font-mono text-[10px] font-bold uppercase">
+              {roleKey}
             </span>
           </div>
-          <div className="grid grid-cols-3 gap-1 bg-base-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200/80 dark:border-slate-800">
-            {["admin", "guardian", "teacher"].map((role) => (
-              <button
-                key={role}
-                onClick={() => onRoleChange && onRoleChange(role)}
-                className={`py-1 rounded-lg text-[10px] font-mono font-bold capitalize transition-all ${
-                  roleKey === role
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-base-content/60 hover:text-base-content hover:bg-base-200 dark:hover:bg-slate-800"
-                }`}
-              >
-                {role}
-              </button>
-            ))}
-          </div>
+          <p className="text-[11px] font-mono font-semibold text-base-content/80 truncate">
+            {user.email}
+          </p>
+          {roleKey !== "admin" && (
+            <button
+              onClick={() =>
+                assignEmailRole({
+                  email: user.email,
+                  role: "admin",
+                  name: user.displayName || "Admin",
+                  linkedId: "adm-01",
+                })
+              }
+              className="w-full mt-1 py-1 px-2 rounded-lg bg-primary/10 hover:bg-primary hover:text-white text-primary text-[10px] font-bold transition cursor-pointer"
+              title={t(
+                "ডেভেলপার/মালিক হিসেবে এই ইমেইলকে অ্যাডমিন করুন",
+                "Set my current Firebase email as Admin"
+              )}
+            >
+              {t("এই ইমেইলকে অ্যাডমিন (Admin) করুন", "Set My Email as Admin")}
+            </button>
+          )}
         </div>
       )}
 
@@ -198,8 +382,8 @@ const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
           <div key={groupIdx} className="space-y-1">
             {!collapsed && (
               <div className="px-3 mb-1.5 flex items-center justify-between">
-                <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-base-content/45">
-                  {group.category}
+                <span className="text-[10px] font-bold tracking-wider text-base-content/50">
+                  {t(group.categoryBn, group.categoryEn)}
                 </span>
                 <span className="h-[1px] flex-1 bg-slate-200/60 dark:bg-slate-800/80 ml-2" />
               </div>
@@ -215,15 +399,19 @@ const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  title={collapsed ? `${group.category}: ${item.label}` : undefined}
-                  className={`flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${
+                  title={
+                    collapsed
+                      ? `${t(group.categoryBn, group.categoryEn)}: ${t(item.labelBn, item.labelEn)}`
+                      : undefined
+                  }
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
                     isActive
-                      ? "bg-primary text-white font-bold shadow-md shadow-primary/25 border border-primary/40"
+                      ? "bg-primary text-white shadow-md shadow-primary/25 border border-primary/40"
                       : "text-base-content/75 hover:bg-base-200/80 dark:hover:bg-slate-800/80 hover:text-base-content"
                   } ${collapsed ? "justify-center px-0" : ""}`}
                 >
                   <Icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-primary"}`} />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
+                  {!collapsed && <span className="truncate">{t(item.labelBn, item.labelEn)}</span>}
                 </NavLink>
               );
             })}
@@ -237,28 +425,25 @@ const Sidebar = ({ currentRole = "admin", onRoleChange }) => {
           {!collapsed && (
             <div className="flex items-center gap-2.5 overflow-hidden">
               <img
-                src={
-                  user?.photoURL ||
-                  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80"
-                }
+                src={user?.photoURL || "/logo.png"}
                 alt={user?.displayName || "User"}
-                className="h-8 w-8 rounded-lg object-cover border border-primary/30 shrink-0"
+                className="h-8 w-8 rounded-lg object-cover border border-primary/30 shrink-0 bg-white"
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-bold text-base-content truncate">
-                  {user?.displayName || "Zabed (User)"}
+                  {user?.displayName || t("ব্যবহারকারী", "User")}
                 </span>
-                <span className="text-[10px] font-mono text-base-content/50 truncate">
-                  {roleKey.toUpperCase()}
+                <span className="text-[10px] font-bold text-primary truncate">
+                  {ROLE_LABELS[roleKey]}
                 </span>
               </div>
             </div>
           )}
 
           <button
-            onClick={() => logOut()}
-            title="Log Out"
-            className="h-8 w-8 rounded-lg flex items-center justify-center text-rose-500 hover:bg-rose-500/10 transition"
+            onClick={handleLogout}
+            title={t("লগআউট", "Logout")}
+            className="h-8 w-8 rounded-lg flex items-center justify-center text-rose-500 hover:bg-rose-500/10 transition cursor-pointer"
           >
             <LogOut className="h-4 w-4" />
           </button>
