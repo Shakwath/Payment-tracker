@@ -1,13 +1,12 @@
 import { useContext, useState } from "react";
 import Registeri from "../../assets/SignUp.png";
-import google from "../../assets/google.svg";
-import github from "../../assets/github.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { useTheme } from "../../Context/ThemeProvider";
+import { useLanguage } from "../../Context/LanguageContext";
 import {
   Eye,
   EyeOff,
@@ -16,446 +15,234 @@ import {
   User,
   ImageIcon,
   ArrowRight,
-  Check,
-  X,
+  ShieldCheck,
+  Globe,
 } from "lucide-react";
 import useAxios from "../../Hooks/useAxios";
 
-const fields = [
-  {
-    name: "name",
-    label: "Full Name",
-    icon: User,
-    type: "text",
-    placeholder: "Enter your name",
-  },
-  {
-    name: "photo",
-    label: "Photo URL",
-    icon: ImageIcon,
-    type: "url",
-    placeholder: "https://image.com/photo.jpg",
-  },
-  {
-    name: "email",
-    label: "Email",
-    icon: Mail,
-    type: "email",
-    placeholder: "Enter your email",
-  },
-];
-
 const SignUp = () => {
-  const { createUser, setUser, updateUserProfile, loading, googleSignIn, gitHubSignIn } = useContext(AuthContext);
+  const { createUser, setUser, updateUserProfile, resolveRoleForEmail, loading } =
+    useContext(AuthContext);
   const navigate = useNavigate();
   const axiosInstance = useAxios();
 
   const [showPass, setShowPass] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [firebaseError, setFirebaseError] = useState("");
-
   const { theme } = useTheme();
   const dark = theme === "dark";
+  const { lang, toggleLang, t } = useLanguage();
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors }
-  } = useForm();
-
-  const password = watch("password", "");
-  const rules = [
-    {
-      text: "6+ characters",
-      valid: password.length >= 6
-    },
-    {
-      text: "Uppercase letter",
-      valid: /[A-Z]/.test(password)
-    },
-    {
-      text: "Lowercase letter",
-      valid: /[a-z]/.test(password)
-    }
-  ];
+  const { register, handleSubmit } = useForm();
 
   const handleRegister = (data) => {
     const { name, email, password, photo } = data;
     createUser(email, password)
       .then(({ user }) => {
-        updateUserProfile(name, photo)
-          .then(() => {
-            localStorage.setItem("userPassword", password);
-
-            setUser({
-              ...user,
-              displayName: name,
-              photoURL: photo
-            });
-
-            axiosInstance.post("/api/users/register", {
+        const assignedRole = resolveRoleForEmail(email, name);
+        updateUserProfile(name, photo || "/logo.png").then(() => {
+          setUser({
+            uid: user.uid,
+            email: user.email,
+            displayName: name,
+            photoURL: photo || "/logo.png",
+            emailVerified: user.emailVerified,
+            role: assignedRole,
+          });
+          axiosInstance
+            .post("/api/users/register", {
               name,
               email,
-              photoURL: photo
-            });
-
-            toast.success("Account created!");
-            reset();
-            navigate("/");
-          });
+              photoURL: photo || "/logo.png",
+              role: assignedRole,
+            })
+            .catch(() => {});
+          toast.success(
+            t(
+              `ফায়ারবেস অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! (রোল: ${assignedRole.toUpperCase()})`,
+              `Firebase account created! (Role: ${assignedRole.toUpperCase()})`
+            )
+          );
+          navigate("/dashboard");
+        });
       })
-      .catch(err => {
-        setFirebaseError(err.message);
+      .catch((err) => {
         toast.error(err.message);
       });
   };
 
-  const handleGoogleSignIn = () => {
-    setFirebaseError("");
-    googleSignIn()
-      .then(async (result) => {
-        const { displayName, email, photoURL } = result.user;
-        try {
-          await axiosInstance.post("/api/users/register", {
-            name: displayName || "User",
-            email,
-            photoURL: photoURL || "",
-          });
-        } catch (dbErr) {
-          console.error("Database registration failed, continuing login:", dbErr);
-        }
-
-        toast.success("Signed up with Google!");
-        navigate("/");
-      })
-      .catch((error) => {
-        setFirebaseError(error.message);
-        toast.error(error.message);
-      });
-  };
-
-  const handleGithubSignIn = () => {
-    setFirebaseError("");
-    gitHubSignIn()
-      .then(async (result) => {
-        const { displayName, email, photoURL } = result.user;
-        try {
-          await axiosInstance.post("/api/users/register", {
-            name: displayName || "User",
-            email,
-            photoURL: photoURL || "",
-          });
-        } catch (dbErr) {
-          console.error("Database registration failed, continuing login:", dbErr);
-        }
-
-        toast.success("Signed up with GitHub!");
-        navigate("/");
-      })
-      .catch((error) => {
-        setFirebaseError(error.message);
-        toast.error(error.message);
-      });
-  };
-
-  const inputClass = (error) =>
-    `w-full bg-transparent py-3.5 px-3 outline-none text-sm ${
-      dark ? "text-white" : "text-slate-800"
-    } ${error ? "" : "placeholder:text-slate-400"}`;
-
   return (
     <section
-      className={`min-h-screen px-5 pt-24 pb-16 transition-all duration-500 ${
-        dark
-          ? "bg-base-100"
-          : "bg-gradient-to-br from-slate-50 via-white to-purple-50/30"
+      className={`min-h-screen px-5 pt-16 pb-16 transition-all duration-500 ${
+        dark ? "bg-base-100" : "bg-gradient-to-br from-slate-50 via-white to-purple-50/30"
       }`}
     >
       <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
-        {/* Image Side */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           className="hidden lg:block"
         >
-          <p className="inline-block rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-mono text-xs font-bold tracking-widest text-primary">
-            JOIN PAYMENTTRACK • REG-01
-          </p>
-          <h2
-            className={`mt-4 text-4xl font-extrabold leading-tight ${
-              dark ? "text-white" : "text-slate-900"
-            }`}
-          >
-            Manage and track all student payments effortlessly
-          </h2>
-          <div
-            className={`mt-8 rounded-3xl border p-5 shadow-xl backdrop-blur ${
-              dark ? "border-slate-800 bg-slate-900/60" : "border-slate-200 bg-white/80"
-            }`}
-          >
+          <div className="flex items-center gap-3 mb-4">
             <img
-              src={Registeri}
-              alt="Register"
-              className={`w-full rounded-2xl transition duration-500 ${
-                dark ? "brightness-95" : "brightness-100"
-              }`}
+              src="/logo.png"
+              alt="Logo"
+              className="h-14 w-14 rounded-2xl object-contain bg-white p-1 border border-primary/25 shadow-sm"
             />
+            <div>
+              <p className="text-xs font-bold text-primary">مركز العلم والهدى</p>
+              <h3 className="text-xl font-extrabold text-base-content">
+                {t("মারকাযুল ইলমি ওয়াল হুদা", "Markajul Ilm Wal Huda")}
+              </h3>
+              <p className="text-xs text-base-content/60">
+                {t(
+                  "দারুল আনোয়ার, পশ্চিম ফটিকা, হাটহাজারী পৌরসভা, চট্টগ্রাম",
+                  "Darul Anwar, West Fotika, Hathazari Municipality, Chattogram"
+                )}
+              </p>
+            </div>
+          </div>
+          <h2 className="text-3xl font-extrabold leading-tight text-base-content">
+            {t(
+              "অভিভাবক ও শিক্ষকদের জন্য সহজ ও নিরাপদ ফায়ারবেস রেজিস্ট্রেশন",
+              "Secure Firebase Portal Registration for Guardians & Faculty"
+            )}
+          </h2>
+          <div className="mt-6 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 shadow-xl bg-white/80 dark:bg-slate-900/60">
+            <img src={Registeri} alt="Register" className="w-full rounded-2xl" />
           </div>
         </motion.div>
 
-        {/* Form */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <div
-            className={`rounded-3xl border p-6 shadow-xl backdrop-blur-xl sm:p-8 transition-all duration-500 ${
-              dark
-                ? "border-slate-800 bg-slate-900/80"
-                : "border-slate-200 bg-white/90"
+            className={`rounded-3xl border p-6 shadow-xl backdrop-blur-xl sm:p-8 ${
+              dark ? "border-slate-800 bg-slate-900/80" : "border-slate-200 bg-white/90"
             }`}
           >
-            <div className="mb-6 text-center">
-              <h1
-                className={`text-3xl font-extrabold tracking-tight ${
-                  dark ? "text-white" : "text-slate-900"
-                }`}
+            <div className="flex justify-end mb-2">
+              <button
+                type="button"
+                onClick={toggleLang}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-primary/30 bg-primary/10 text-primary text-xs font-bold cursor-pointer"
               >
-                Create Account
+                <Globe className="h-3.5 w-3.5" />
+                <span>{lang === "bn" ? "English" : "বাংলা"}</span>
+              </button>
+            </div>
+
+            <div className="mb-5 text-center">
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="h-12 w-12 mx-auto mb-2 rounded-2xl object-contain bg-white p-1 border border-primary/20"
+              />
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-base-content">
+                {t("নতুন অ্যাকাউন্ট তৈরি করুন", "Create New Account")}
               </h1>
-              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                Start tracking tuition and fee collections today
+              <p className="mt-1 text-xs text-base-content/60">
+                {t("মারকাযুল ইলমি ওয়াল হুদা • হাটহাজারী, চট্টগ্রাম", "Markajul Ilm Wal Huda • Hathazari, Chattogram")}
               </p>
             </div>
-            <form
-              onSubmit={handleSubmit(handleRegister)}
-              className="space-y-4"
-            >
-              {firebaseError && (
-                <p className="rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-500">
-                  {firebaseError}
-                </p>
-              )}
 
-              {/* Common Fields */}
-              {fields.map(({ name, label, icon: Icon, type, placeholder }) => (
-                <div key={name}>
-                  <label
-                    className={`mb-1 block text-xs font-mono font-bold uppercase tracking-wider ${
-                      dark ? "text-slate-300" : "text-slate-700"
-                    }`}
-                  >
-                    {label}
-                  </label>
+            <div className="mb-4 p-3 rounded-2xl bg-primary/10 border border-primary/20 flex items-start gap-2 text-xs text-primary">
+              <ShieldCheck className="h-4 w-4 shrink-0 mt-0.5" />
+              <span>
+                {t(
+                  "অ্যাডমিন প্যানেল থেকে আপনার ইমেইলের বিপরীতে যে রোল (অভিভাবক / শিক্ষক / অ্যাডমিন) নির্ধারণ করা হয়েছে, রেজিস্ট্রেশনের পর সেটি স্বয়ংক্রিয়ভাবে কার্যকর হবে।",
+                  "Your account role (Guardian / Teacher / Admin) is assigned by the Madrasa Admin based on your registered email address."
+                )}
+              </span>
+            </div>
 
-                  <div className={`flex items-center rounded-2xl border px-4 transition ${
-                    errors[name]
-                      ? "border-red-500 ring-2 ring-red-500/20"
-                      : dark
-                      ? "border-slate-800 bg-slate-950 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
-                      : "border-slate-200 bg-slate-50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
-                  }`}>
-                    <Icon className="h-5 w-5 text-slate-400" />
-                    <input
-                      type={type}
-                      placeholder={placeholder}
-                      className={inputClass(errors[name])}
-                      {...register(name, {
-                        required: `${label} is required`,
-                        ...(name === "name" && {
-                          minLength: {
-                            value: 5,
-                            message: "Name must be 5 characters"
-                          }
-                        }),
-                        ...(name === "email" && {
-                          pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: "Invalid email address"
-                          }
-                        }),
-                        ...(name === "photo" && {
-                          pattern: {
-                            value: /^https?:\/\/.+/,
-                            message: "Enter valid image URL"
-                          }
-                        })
-                      })}
-                    />
-                  </div>
-                  {errors[name] && (
-                    <p className="mt-1 text-xs text-red-500 font-medium">
-                      {errors[name].message}
-                    </p>
-                  )}
-                </div>
-              ))}
-
-              {/* Password */}
+            <form onSubmit={handleSubmit(handleRegister)} className="space-y-4 text-xs">
               <div>
-                <label
-                  className={`mb-1 block text-xs font-mono font-bold uppercase tracking-wider ${
-                    dark ? "text-slate-300" : "text-slate-700"
-                  }`}
-                >
-                  Password
+                <label className="mb-1 block font-bold text-base-content/80">
+                  {t("পূর্ণ নাম", "Full Name")}
                 </label>
+                <div className="flex items-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4">
+                  <User className="h-4 w-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder={t("আপনার পূর্ণ নাম লিখুন", "Enter your full name")}
+                    className="w-full bg-transparent py-3 px-3 outline-none"
+                    {...register("name", { required: true })}
+                  />
+                </div>
+              </div>
 
-                <div className={`flex items-center rounded-2xl border px-4 transition ${
-                  errors.password
-                    ? "border-red-500 ring-2 ring-red-500/20"
-                    : dark
-                    ? "border-slate-800 bg-slate-950 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
-                    : "border-slate-200 bg-slate-50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
-                }`}>
-                  <Lock className="h-5 w-5 text-slate-400" />
+              <div>
+                <label className="mb-1 block font-bold text-base-content/80">
+                  {t("ইমেইল ঠিকানা", "Email Address")}
+                </label>
+                <div className="flex items-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4">
+                  <Mail className="h-4 w-4 text-slate-400" />
+                  <input
+                    type="email"
+                    placeholder={t("আপনার ইমেইল লিখুন", "Enter your email address")}
+                    className="w-full bg-transparent py-3 px-3 outline-none"
+                    {...register("email", { required: true })}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block font-bold text-base-content/80">
+                  {t("ছবির লিংক (ঐচ্ছিক)", "Photo URL (Optional)")}
+                </label>
+                <div className="flex items-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4">
+                  <ImageIcon className="h-4 w-4 text-slate-400" />
+                  <input
+                    type="url"
+                    placeholder="https://example.com/photo.jpg"
+                    className="w-full bg-transparent py-3 px-3 outline-none"
+                    {...register("photo")}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block font-bold text-base-content/80">
+                  {t("পাসওয়ার্ড", "Password")}
+                </label>
+                <div className="flex items-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-4">
+                  <Lock className="h-4 w-4 text-slate-400" />
                   <input
                     type={showPass ? "text" : "password"}
-                    placeholder="Create password"
-                    className={inputClass(errors.password)}
-                    {...register("password", {
-                      required: "Password required"
-                    })}
+                    placeholder={t("কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড", "At least 6 characters")}
+                    className="w-full bg-transparent py-3 px-3 outline-none"
+                    {...register("password", { required: true })}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass(!showPass)}
-                    className={dark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-700"}
+                    className="cursor-pointer"
                   >
-                    {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
-
-                {/* Password Suggestion */}
-                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-                  {rules.map((item) => (
-                    <p
-                      key={item.text}
-                      className={`flex items-center gap-1.5 font-mono text-[11px] ${
-                        item.valid ? "text-emerald-500 font-bold" : "text-slate-400"
-                      }`}
-                    >
-                      {item.valid ? <Check size={13} /> : <X size={13} />}
-                      {item.text}
-                    </p>
-                  ))}
-                </div>
-              </div>
-
-              {/* Confirm Password */}
-              <div>
-                <label
-                  className={`mb-1 block text-xs font-mono font-bold uppercase tracking-wider ${
-                    dark ? "text-slate-300" : "text-slate-700"
-                  }`}
-                >
-                  Confirm Password
-                </label>
-                <div className={`flex items-center rounded-2xl border px-4 transition ${
-                  errors.confirmPassword
-                    ? "border-red-500 ring-2 ring-red-500/20"
-                    : dark
-                    ? "border-slate-800 bg-slate-950 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
-                    : "border-slate-200 bg-slate-50 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20"
-                }`}>
-                  <Lock className="h-5 w-5 text-slate-400" />
-                  <input
-                    type={showConfirm ? "text" : "password"}
-                    placeholder="Confirm password"
-                    className={inputClass(errors.confirmPassword)}
-                    {...register("confirmPassword", {
-                      required: "Confirm password required",
-                      validate: (value) =>
-                        value === password || "Password not matched"
-                    })}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirm(!showConfirm)}
-                    className={dark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-700"}
-                  >
-                    {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <p className="mt-1 text-xs text-red-500 font-medium">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
               </div>
 
               <button
                 disabled={loading}
-                className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-secondary py-3.5 font-bold text-white shadow-lg shadow-primary/25 transition duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-secondary py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/25 cursor-pointer"
               >
-                {loading ? "Creating..." : "Register"}
-                {!loading && (
-                  <ArrowRight
-                    size={18}
-                    className="transition group-hover:translate-x-1"
-                  />
-                )}
+                <span>
+                  {loading
+                    ? t("তৈরি হচ্ছে...", "Creating Account...")
+                    : t("রেজিস্ট্রেশন সম্পন্ন করুন", "Complete Registration")}
+                </span>
+                <ArrowRight size={16} />
               </button>
-              <p className="text-center text-sm text-slate-600 dark:text-slate-400">
-                Already have an account?
-                <Link
-                  to="/signin"
-                  className="ml-1 font-bold text-primary hover:underline"
-                >
-                  Login
+
+              <p className="text-center text-xs text-slate-600 dark:text-slate-400">
+                {t("ইতিমধ্যে অ্যাকাউন্ট আছে?", "Already have an account?")}{" "}
+                <Link to="/signin" className="font-bold text-primary hover:underline">
+                  {t("লগইন করুন", "Sign In")}
                 </Link>
               </p>
-
-              {/* divider */}
-              <div className="relative py-1">
-                <div className="absolute inset-0 flex items-center">
-                  <div className={`w-full border-t ${dark ? "border-slate-800" : "border-slate-200"}`} />
-                </div>
-                <div className="relative flex justify-center">
-                  <span
-                    className={`px-4 text-xs font-mono uppercase tracking-wider ${
-                      dark
-                        ? "bg-slate-900 text-slate-500"
-                        : "bg-white text-slate-400"
-                    }`}
-                  >
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-
-              {/* social login */}
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={handleGoogleSignIn}
-                  className={`flex items-center justify-center gap-3 rounded-2xl border px-4 py-3 font-semibold text-sm shadow-sm transition hover:scale-[1.02] active:scale-[0.98] ${
-                    dark
-                      ? "border-slate-800 bg-slate-950 text-white hover:bg-slate-800"
-                      : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-white"
-                  }`}
-                >
-                  <img src={google} alt="Google" className="h-5 w-5" />
-                  <span>Google</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleGithubSignIn}
-                  className={`flex items-center justify-center gap-3 rounded-2xl border px-4 py-3 font-semibold text-sm shadow-sm transition hover:scale-[1.02] active:scale-[0.98] ${
-                    dark
-                      ? "border-slate-800 bg-slate-950 text-white hover:bg-slate-800"
-                      : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-white"
-                  }`}
-                >
-                  <img src={github} alt="GitHub" className="h-5 w-5" />
-                  <span>GitHub</span>
-                </button>
-              </div>
             </form>
           </div>
         </motion.div>
